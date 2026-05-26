@@ -2,36 +2,1447 @@
 <html lang="sq">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LUDO ALB KING | Premium Online</title>
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/ui.css">
-    <link rel="stylesheet" href="styles/animations.css">
-    <link rel="stylesheet" href="styles/responsive.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ========== BAZË ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0f1c;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        /* ========== EKRAZI I NGARKIMIT ========== */
+        #loading-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at 30% 20%, #121a2a, #000);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            transition: opacity 0.8s;
+        }
+        .loader {
+            width: 60px; height: 60px;
+            border: 4px solid rgba(255,215,0,0.3);
+            border-top-color: #F9D423;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ========== PANELI I PROFILIT ========== */
+        .profile-bar {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 300;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 50px;
+            padding: 8px 20px;
+            display: flex;
+            gap: 20px;
+            pointer-events: auto;
+            border: 1px solid rgba(255,215,0,0.4);
+        }
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .avatar {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, #F9D423, #FF6B35);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .stats {
+            display: flex;
+            flex-direction: column;
+        }
+        .stats .name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .stats .level {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+        .coins {
+            background: #F9D423;
+            color: #1e2a2e;
+            border-radius: 30px;
+            padding: 4px 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ========== MENUJA ANËSORE ========== */
+        .side-menu {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: auto;
+        }
+        .side-btn {
+            width: 50px; height: 50px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: 1px solid rgba(255,215,0,0.4);
+            transition: 0.2s;
+        }
+        .side-btn:hover {
+            transform: scale(1.05);
+            background: rgba(0,0,0,0.8);
+        }
+
+        /* ========== CHAT ========== */
+        .chat-container {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            width: 280px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            padding: 12px;
+            pointer-events: auto;
+            border: 1px solid rgba(255,215,0,0.4);
+            z-index: 300;
+        }
+        .chat-messages {
+            height: 140px;
+            overflow-y: auto;
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+            padding: 5px;
+        }
+        .chat-messages div {
+            background: rgba(255,255,245,0.1);
+            border-radius: 20px;
+            padding: 6px 12px;
+            margin-bottom: 6px;
+        }
+        .chat-input-area {
+            display: flex;
+            gap: 8px;
+        }
+        .chat-input {
+            flex: 1;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #F9D423;
+            border-radius: 30px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 0.8rem;
+        }
+        .chat-send {
+            background: #F9D423;
+            border: none;
+            border-radius: 30px;
+            padding: 0 15px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #1e2a2e;
+        }
+
+        /* ========== MODALET ========== */
+        .modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-card {
+            background: linear-gradient(145deg, #1e2a3a, #0a121c);
+            border-radius: 48px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            border: 2px solid #F9D423;
+            text-align: center;
+        }
+        .modal-card h2 {
+            margin-bottom: 20px;
+            color: #F9D423;
+        }
+        .modal-card button {
+            background: #F9D423;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .store-item {
+            margin: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ========== STILET E MENYSË KRYESORE ========== */
+        #menu-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(20,30,50,0.95), #000);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+        .menu-card {
+            background: rgba(15,25,45,0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 60px;
+            padding: 40px 30px;
+            text-align: center;
+            border: 1px solid rgba(255,215,0,0.4);
+            width: 90%;
+            max-width: 450px;
+        }
+        .menu-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFE68F, #FF884D);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        .menu-subtitle {
+            margin-bottom: 30px;
+            color: #ccd6f0;
+        }
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .menu-btn {
+            padding: 14px 0;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 50px;
+            background: rgba(255,255,245,0.08);
+            color: white;
+            border: 1px solid rgba(255,215,0,0.5);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .menu-btn.primary {
+            background: linear-gradient(95deg, #F9D423, #FF6B35);
+            color: #0a0f1f;
+            border: none;
+        }
+        .menu-btn.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(249,212,35,0.5);
+        }
+        .menu-btn.secondary {
+            background: rgba(255,255,255,0.1);
+        }
+        .menu-btn.secondary:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        /* ========== STILET ORIGJINALE TË LOJËS (të paprekura) ========== */
+        :root {
+            --ludo-red: #E53935;
+            --ludo-green: #43A047;
+            --ludo-yellow: #FDD835;
+            --ludo-blue: #1E88E5;
+            --board-cream: #F5F5DC;
+            --board-border: #8B4513;
+            --cell-white: #FFFFFF;
+            --text-dark: #333333;
+        }
+        #game-ui {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            padding: 20px;
+            display: none;
+        }
+        .player-panel {
+            position: absolute;
+            top: 20px; left: 20px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 12px 24px;
+            pointer-events: auto;
+            border-left: 4px solid #F9D423;
+        }
+        .current-player {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .player-color-dot {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+        }
+        .player-name { font-weight: 700; font-size: 1.2rem; }
+        .turn-status { font-size: 0.75rem; opacity: 0.8; margin-top: 5px; }
+
+        .dice-panel {
+            position: absolute;
+            bottom: 25px; right: 25px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 60px;
+            padding: 15px 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            pointer-events: auto;
+            border: 1px solid rgba(255,215,0,0.3);
+        }
+        .dice-container {
+            display: flex;
+            gap: 20px;
+        }
+        .dice-display {
+            width: 70px; height: 70px;
+            background: linear-gradient(145deg, #f8f3e0, #e0d6b0);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            cursor: pointer;
+        }
+        .roll-btn {
+            background: linear-gradient(95deg, #F9D423, #FF6B35);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 40px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .piece-counter {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 12px 18px;
+            pointer-events: auto;
+            font-size: 0.8rem;
+        }
+        .message-log {
+            position: absolute;
+            bottom: 100px; left: 30px;
+            max-width: 280px;
+            pointer-events: auto;
+        }
+        .log-entry {
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            padding: 6px 12px;
+            border-radius: 20px;
+            margin-bottom: 6px;
+            font-size: 0.75rem;
+        }
+        .left-controls {
+            position: absolute;
+            bottom: 30px; left: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: auto;
+        }
+        .settings-btn {
+            width: 44px; height: 44px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 30px;
+            border: 1px solid rgba(255,215,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        #win-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            flex-direction: column;
+        }
+        .win-card {
+            background: linear-gradient(145deg, #1e2a3a, #0a121c);
+            border-radius: 60px;
+            padding: 40px;
+            text-align: center;
+            border: 2px solid #F9D423;
+        }
+        .win-title { font-size: 2rem; margin-bottom: 20px; }
+        .winner-name { font-size: 1.8rem; color: #F9D423; margin-bottom: 30px; }
+        @media (max-width: 700px) {
+            .dice-display { width: 55px; height: 55px; font-size: 1.6rem; }
+            .chat-container { width: 240px; }
+            .menu-title { font-size: 2rem; }
+            .player-panel { padding: 8px 16px; }
+            .player-name { font-size: 1rem; }
+        }
+    </style>
 </head>
 <body>
-    <div id="app">
-        <div id="loading-screen">
-            <div class="loader"></div>
-            <h2>LUDO ALB KING</h2>
-            <p>Po ngarkohet...</p>
+    <!-- Loading Screen -->
+<div id="loading-screen"><div class="loader"></div><h2>LUDO ALB KING</h2><p>Po ngarkohet...</p></div>
+
+<!-- Profile Bar -->
+<div class="profile-bar">
+    <div class="profile-info" onclick="openProfileModal()">
+        <div class="avatar"><i class="fas fa-crown"></i></div>
+        <div class="stats">
+            <span class="name" id="playerNameDisplay">Lojtari</span>
+            <span class="level" id="playerLevelDisplay">Niveli 1</span>
         </div>
-        <div id="menu-container"></div>
-        <div id="game-container" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:1;"></div>
-        <div id="ui-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:2;"></div>
     </div>
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/",
-                "howler": "https://unpkg.com/howler@2.2.4/dist/howler.min.js",
-                "gsap": "https://unpkg.com/gsap@3.12.5/index.js"
-            }
+    <div class="coins" id="coinDisplay">🪙 100</div>
+</div>
+
+<!-- Side Menu -->
+<div class="side-menu">
+    <div class="side-btn" onclick="openStoreModal()"><i class="fas fa-store"></i></div>
+    <div class="side-btn" onclick="openProfileModal()"><i class="fas fa-user"></i></div>
+    <div class="side-btn" onclick="toggleSound()"><i class="fas fa-volume-up" id="soundIcon"></i></div>
+</div>
+
+<!-- Chat -->
+<div class="chat-container">
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-area">
+        <input type="text" id="chatInput" class="chat-input" placeholder="Mesazh...">
+        <button class="chat-send" onclick="sendChatMessage()">Dërgo</button>
+    </div>
+</div>
+
+<!-- Modals -->
+<div id="profileModal" class="modal">
+    <div class="modal-card">
+        <h2><i class="fas fa-user"></i> Profili</h2>
+        <p><strong>Emri:</strong> <span id="modalPlayerName">Lojtari</span></p>
+        <p><strong>Niveli:</strong> <span id="modalPlayerLevel">1</span></p>
+        <p><strong>XP:</strong> <span id="modalPlayerXp">0</span> / 100</p>
+        <p><strong>Monedha:</strong> <span id="modalPlayerCoins">100</span> 🪙</p>
+        <p><strong>Fitoret:</strong> <span id="modalPlayerWins">0</span></p>
+        <button onclick="closeModal('profileModal')">Mbylle</button>
+    </div>
+</div>
+
+<div id="storeModal" class="modal">
+    <div class="modal-card">
+        <h2><i class="fas fa-store"></i> Dyqani</h2>
+        <div id="storeItems"></div>
+        <button onclick="closeModal('storeModal')">Mbylle</button>
+    </div>
+</div>
+
+<!-- Meny kryesore -->
+<div id="menu-screen">
+    <div class="menu-card">
+        <div class="menu-title">LUDO ALB KING</div>
+        <div class="menu-subtitle">Premium Online</div>
+        <div class="menu-buttons">
+            <button class="menu-btn primary" id="resumeBtn" style="display:none;" onclick="resumeGame()">Vazhdo Lojën</button>
+            <button class="menu-btn primary" onclick="selectMode('single')">🤖 Kundër AI</button>
+            <button class="menu-btn primary" onclick="selectMode('2p')">👥 2 Lojtarë</button>
+            <button class="menu-btn primary" onclick="selectMode('4p')">👥👥 4 Lojtarë</button>
+            <button class="menu-btn secondary" onclick="showHelp()">📖 Mëso si të luash</button>
+        </div>
+    </div>
+</div>
+
+<!-- Ekrani i emrave -->
+<div id="name-screen" style="display:none;">
+    <div class="menu-card">
+        <h1 style="font-size:2rem; margin-bottom:20px;">Vendosni emrat</h1>
+        <div class="name-inputs" id="name-inputs-container"></div>
+        <div class="difficulty-selector" id="difficulty-selector" style="display:none;">
+            <button class="difficulty-btn" onclick="setDifficulty('easy')">Lehtë</button>
+            <button class="difficulty-btn selected" onclick="setDifficulty('normal')">Mesatare</button>
+            <button class="difficulty-btn" onclick="setDifficulty('hard')">E vështirë</button>
+        </div>
+        <div class="difficulty-selector" id="dice-mode-selector">
+            <button class="difficulty-btn" onclick="setDiceMode('single')">🎲 Një Zar</button>
+            <button class="difficulty-btn selected" onclick="setDiceMode('double')">🎲🎲 Dy Zare</button>
+        </div>
+        <div class="menu-buttons" style="margin-top:30px;">
+            <button class="menu-btn secondary" onclick="backToMenu()">Kthehu</button>
+            <button class="menu-btn primary" onclick="startGameWithNames()">Fillo Lojën</button>
+        </div>
+    </div>
+</div>
+
+<!-- Ndihmesa -->
+<div id="help-modal" class="modal">
+    <div class="help-content" style="background:white; color:#333; border-radius:30px; padding:30px; max-width:500px; overflow-y:auto; max-height:80vh;">
+        <span class="close-btn" style="float:right; font-size:2rem; cursor:pointer;" onclick="hideHelp()">&times;</span>
+        <h2 style="color:#1E88E5;">Si të luash Ludo Alb King</h2>
+        <h3>🎯 Objektivi</h3><p>Lëvizi të 4 pjesët nga baza në qendër.</p>
+        <h3>🎲 Fillimi</h3><p>Duhet 6 për të nisur. 6 jep rradhë shtesë.</p>
+        <h3>🚶 Lëvizja</h3><p>Kliko mbi pjesën e theksuar.</p>
+        <h3>⚔️ Kapja</h3><p>Nëse zbret në katrorin e kundërshtarit, ai kthehet në shtëpi.</p>
+        <h3>🏠 Shtëpia</h3><p>Pasi rrethon tabelën, duhet numri i saktë për të hyrë në qendër.</p>
+        <h3>🏆 Fituesi</h3><p>Ai që fut të 4 pjesët në qendër fiton.</p>
+    </div>
+</div>
+
+<!-- Ekrani i fitores -->
+<div id="win-screen">
+    <div class="win-card">
+        <h1 class="win-title">🎉 Urime! 🎉</h1>
+        <p class="winner-name" id="winner-name">RED WINS!</p>
+        <button class="menu-btn primary" onclick="restartGame()">Luaj Përsëri</button>
+    </div>
+</div>
+
+<!-- Container për Three.js -->
+<div id="game-container" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:1;"></div>
+
+<!-- UI i lojës (mbivendosje) -->
+<div id="game-ui">
+    <div class="player-panel">
+        <div class="current-player">
+            <div class="player-color-dot" id="player-dot"></div>
+            <span class="player-name" id="player-name">RED</span>
+        </div>
+        <div class="turn-status" id="turn-status">Rrotulloni zarin...</div>
+    </div>
+    <div class="piece-counter">
+        <div class="counter-title">Pjesët në shtëpi</div>
+        <div class="counter-group"><div class="counter-label">Ju</div><div class="counter-row"><div class="counter-dot" style="background:#E53935"></div><span id="red-count">0/4</span></div><div class="counter-row"><div class="counter-dot" style="background:#FDD835"></div><span id="yellow-count">0/4</span></div></div>
+        <div class="counter-group"><div class="counter-label">AI</div><div class="counter-row"><div class="counter-dot" style="background:#43A047"></div><span id="green-count">0/4</span></div><div class="counter-row"><div class="counter-dot" style="background:#1E88E5"></div><span id="blue-count">0/4</span></div></div>
+    </div>
+    <div class="message-log" id="message-log"></div>
+    <div class="left-controls">
+        <button class="settings-btn controls-toggle" id="controls-toggle" onclick="toggleControls()">▲</button>
+        <div class="controls-buttons" id="controls-buttons" style="display:none;">
+            <button class="settings-btn" onclick="goHome()">🏠</button>
+            <button class="settings-btn" onclick="toggleSound()">🔊</button>
+            <button class="settings-btn" onclick="saveAndQuit()">💾</button>
+            <button class="settings-btn" onclick="takeScreenshot()">📷</button>
+            <button class="settings-btn" onclick="shareGame()">📤</button>
+            <button class="settings-btn" onclick="zoomIn()">➕</button>
+            <button class="settings-btn" onclick="zoomOut()">➖</button>
+            <button class="settings-btn" onclick="showHelp()">❓</button>
+        </div>
+    </div>
+    <div class="dice-panel">
+        <div class="dice-container">
+            <div class="dice-display" id="dice-1" onclick="selectDice(0)">?</div>
+            <div class="dice-display" id="dice-2" onclick="selectDice(1)">?</div>
+        </div>
+        <button class="roll-btn" id="roll-btn" onclick="rollDice()">Rrotullo</button>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+}
+</script>
+<script type="module">import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ============== KONSTANTAT ==============
+const COLORS = { RED: 0xE53935, GREEN: 0x43A047, YELLOW: 0xFDD835, BLUE: 0x1E88E5, WHITE: 0xFFFFFF, CREAM: 0xF5F5DC, BOARD_BROWN: 0x8B4513 };
+const PLAYER_NAMES = ['RED', 'GREEN', 'YELLOW', 'BLUE'];
+const PLAYER_COLORS = [COLORS.RED, COLORS.GREEN, COLORS.YELLOW, COLORS.BLUE];
+const CELL = 1.2;
+const BOARD_SIZE = 15;
+
+// ============== AUDIO ENGINE ==============
+class AudioEngine {
+    constructor() { this.ctx = null; this.enabled = true; }
+    init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); if (this.ctx.state === 'suspended') this.ctx.resume(); }
+    playTone(freq, type, dur) { if (!this.enabled || !this.ctx) return; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = type; osc.frequency.value = freq; gain.gain.setValueAtTime(0.3, this.ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + dur); osc.connect(gain); gain.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + dur); }
+    playRoll() { this.init(); for (let i=0;i<8;i++) setTimeout(()=>this.playTone(600+Math.random()*200,'square',0.05), i*60); }
+    playMove() { this.init(); this.playTone(400,'sine',0.1); setTimeout(()=>this.playTone(600,'sine',0.1),100); }
+    playCapture() { this.init(); this.playTone(200,'sawtooth',0.2); this.playTone(100,'square',0.3); }
+    playWin() { this.init(); [523,659,784,1047].forEach((f,i)=>setTimeout(()=>this.playTone(f,'triangle',0.3),i*150)); }
+    toggle() { this.enabled = !this.enabled; return this.enabled; }
+}
+const audio = new AudioEngine();
+window.audio = audio;
+
+// ============== THREE.JS SETUP ==============
+const container = document.getElementById('game-container');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x87CEEB);
+scene.fog = new THREE.FogExp2(0x87CEEB, 0.008);
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 1000);
+const isMobile = window.innerWidth < 768;
+const cameraDistance = isMobile ? 32 : 25;
+camera.position.set(0, cameraDistance, cameraDistance);
+camera.lookAt(0,0,0);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+container.appendChild(renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = 0.05; controls.maxPolarAngle = Math.PI/2.3; controls.minDistance=15; controls.maxDistance=50;
+
+// Ndriçimi
+const ambientLight = new THREE.AmbientLight(0xffffff,1.0); scene.add(ambientLight);
+const dirLight = new THREE.DirectionalLight(0xffffff,1.2); dirLight.position.set(15,30,15); dirLight.castShadow=true; scene.add(dirLight);
+const fillLight = new THREE.DirectionalLight(0xffffff,0.5); fillLight.position.set(-15,20,-15); scene.add(fillLight);
+
+// ============== 3D DICE ==============
+function createDiceFaceTexture(val){
+    const canvas = document.createElement('canvas'); canvas.width=128; canvas.height=128;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,128,128);
+    ctx.fillStyle='#333333';
+    const dots={1:[[64,64]],2:[[32,32],[96,96]],3:[[32,32],[64,64],[96,96]],4:[[32,32],[96,32],[32,96],[96,96]],5:[[32,32],[96,32],[64,64],[32,96],[96,96]],6:[[32,32],[96,32],[32,64],[96,64],[32,96],[96,96]]};
+    (dots[val]||[]).forEach(([x,y])=>{ ctx.beginPath(); ctx.arc(x,y,12,0,Math.PI*2); ctx.fill(); });
+    return new THREE.CanvasTexture(canvas);
+}
+const dice3D=[];
+function create3DDice(){
+    const diceGeo = new THREE.BoxGeometry(1.5,1.5,1.5);
+    for(let i=0;i<2;i++){
+        const materials = [1,6,2,5,3,4].map(v=>new THREE.MeshStandardMaterial({ map: createDiceFaceTexture(v) }));
+        const dice = new THREE.Mesh(diceGeo, materials);
+        dice.position.set(i===0?-2:2,8,0); dice.castShadow=true; dice.visible=false;
+        scene.add(dice); dice3D.push(dice);
+    }
+}
+create3DDice();
+function animate3DDiceRoll(v1,v2){
+    const single = STATE.diceMode==='single';
+    dice3D.forEach((dice,i)=>{
+        if(single && i===1){ dice.visible=false; return; }
+        dice.visible=true; dice.position.y=8;
+        gsap.to(dice.rotation,{ x:Math.random()*Math.PI*4, y:Math.random()*Math.PI*4, z:Math.random()*Math.PI*4, duration:0.8, ease:'power2.out', onComplete:()=>setDiceFinalRotation(dice,i===0?v1:v2) });
+        gsap.to(dice.position,{ y:10, duration:0.2, yoyo:true, repeat:2, ease:'power2.out' });
+    });
+    setTimeout(()=>dice3D.forEach(d=>d.visible=false),1500);
+}
+function setDiceFinalRotation(dice,val){
+    const rot = {1:{x:Math.PI/2,y:0,z:0},2:{x:0,y:0,z:0},3:{x:0,y:Math.PI/2,z:0},4:{x:0,y:-Math.PI/2,z:0},5:{x:Math.PI,y:0,z:0},6:{x:-Math.PI/2,y:0,z:0}}[val]||{x:0,y:0,z:0};
+    gsap.to(dice.rotation, rot, 0.2);
+}
+
+// ============== TABELA 3D ==============
+const boardGroup = new THREE.Group(); scene.add(boardGroup);
+const piecesGroup = new THREE.Group(); scene.add(piecesGroup);
+const materials = {
+    cream: new THREE.MeshStandardMaterial({ color: COLORS.CREAM, roughness:0.8 }),
+    white: new THREE.MeshStandardMaterial({ color: COLORS.WHITE, roughness:0.5 }),
+    brown: new THREE.MeshStandardMaterial({ color: COLORS.BOARD_BROWN, roughness:0.7 }),
+    red: new THREE.MeshStandardMaterial({ color: COLORS.RED, roughness:0.4 }),
+    green: new THREE.MeshStandardMaterial({ color: COLORS.GREEN, roughness:0.4 }),
+    yellow: new THREE.MeshStandardMaterial({ color: COLORS.YELLOW, roughness:0.4 }),
+    blue: new THREE.MeshStandardMaterial({ color: COLORS.BLUE, roughness:0.4 }),
+};
+function getWorldPos(col,row){ return { x: (col-7)*CELL, z: (row-7)*CELL }; }
+
+// Rruga e tabelës (origjinale)
+const PATH_COORDS = [
+    {c:1,r:6},{c:2,r:6},{c:3,r:6},{c:4,r:6},{c:5,r:6},
+    {c:6,r:5},{c:6,r:4},{c:6,r:3},{c:6,r:2},{c:6,r:1},{c:6,r:0},
+    {c:7,r:0},{c:8,r:0},{c:8,r:1},{c:8,r:2},{c:8,r:3},{c:8,r:4},{c:8,r:5},
+    {c:9,r:6},{c:10,r:6},{c:11,r:6},{c:12,r:6},{c:13,r:6},{c:14,r:6},
+    {c:14,r:7},{c:14,r:8},{c:13,r:8},{c:12,r:8},{c:11,r:8},{c:10,r:8},{c:9,r:8},
+    {c:8,r:9},{c:8,r:10},{c:8,r:11},{c:8,r:12},{c:8,r:13},{c:8,r:14},
+    {c:7,r:14},{c:6,r:14},{c:6,r:13},{c:6,r:12},{c:6,r:11},{c:6,r:10},{c:6,r:9},
+    {c:5,r:8},{c:4,r:8},{c:3,r:8},{c:2,r:8},{c:1,r:8},{c:0,r:8},{c:0,r:7}
+];
+const SAFE_SQUARES = [0,8,13,21,26,34,39,47];
+const HOME_COLUMNS = {
+    RED: [{c:1,r:7},{c:2,r:7},{c:3,r:7},{c:4,r:7},{c:5,r:7},{c:6,r:7}],
+    GREEN: [{c:7,r:1},{c:7,r:2},{c:7,r:3},{c:7,r:4},{c:7,r:5},{c:7,r:6}],
+    YELLOW: [{c:13,r:7},{c:12,r:7},{c:11,r:7},{c:10,r:7},{c:9,r:7},{c:8,r:7}],
+    BLUE: [{c:7,r:13},{c:7,r:12},{c:7,r:11},{c:7,r:10},{c:7,r:9},{c:7,r:8}]
+};
+const START_POSITIONS = { RED:0, GREEN:13, YELLOW:26, BLUE:39 };
+
+function createBoard(){
+    const baseGeo = new THREE.BoxGeometry(BOARD_SIZE*CELL+2,0.5,BOARD_SIZE*CELL+2);
+    const base = new THREE.Mesh(baseGeo, materials.cream); base.position.y=-0.25; base.receiveShadow=true; boardGroup.add(base);
+    const borderGeo = new THREE.BoxGeometry(BOARD_SIZE*CELL+3,0.6,BOARD_SIZE*CELL+3);
+    const border = new THREE.Mesh(borderGeo, materials.brown); border.position.y=-0.35; boardGroup.add(border);
+    // Home bases
+    const corners = [[0,0,COLORS.RED],[9,0,COLORS.GREEN],[9,9,COLORS.YELLOW],[0,9,COLORS.BLUE]];
+    corners.forEach(([sc,sr,col])=>{
+        const cx = (sc+3-7.5)*CELL; const cz = (sr+3-7.5)*CELL;
+        const plate = new THREE.Mesh(new THREE.BoxGeometry(6*CELL-0.2,0.15,6*CELL-0.2), new THREE.MeshStandardMaterial({ color:col, roughness:0.5 }));
+        plate.position.set(cx,0.08,cz); boardGroup.add(plate);
+    });
+    PATH_COORDS.forEach((coord,idx)=>{
+        const pos = getWorldPos(coord.c,coord.r);
+        let mat = materials.white;
+        if(idx===START_POSITIONS.RED) mat=materials.red;
+        else if(idx===START_POSITIONS.GREEN) mat=materials.green;
+        else if(idx===START_POSITIONS.YELLOW) mat=materials.yellow;
+        else if(idx===START_POSITIONS.BLUE) mat=materials.blue;
+        const cell = new THREE.Mesh(new THREE.BoxGeometry(CELL*0.9,0.1,CELL*0.9), mat);
+        cell.position.set(pos.x,0.05,pos.z); cell.receiveShadow=true; boardGroup.add(cell);
+        if(SAFE_SQUARES.includes(idx)){
+            const star = new THREE.Mesh(new THREE.ConeGeometry(0.2,0.15,5), new THREE.MeshStandardMaterial({ color:0xFFD700, metalness:0.5 }));
+            star.position.set(pos.x,0.15,pos.z); boardGroup.add(star);
         }
-    </script>
-    <script type="module" src="src/main.js"></script>
+    });
+    Object.entries(HOME_COLUMNS).forEach(([color,coords])=>{
+        const mat = materials[color.toLowerCase()];
+        coords.forEach(coord=>{
+            const pos = getWorldPos(coord.c,coord.r);
+            const cell = new THREE.Mesh(new THREE.BoxGeometry(CELL*0.9,0.1,CELL*0.9), mat);
+            cell.position.set(pos.x,0.05,pos.z); boardGroup.add(cell);
+        });
+    });
+}
+
+// ============== PIECES ==============
+class Piece {
+    constructor(color, colorName, id, homePos){
+        this.color=color; this.colorName=colorName; this.id=id; this.homePos={...homePos, y:0.5};
+        this.pathIndex=-1; this.homeColumnIndex=-1; this.finished=false;
+        this.mesh = this.createMesh();
+        this.mesh.position.set(homePos.x,0.5,homePos.z);
+        this.mesh.userData = { owner: this };
+        piecesGroup.add(this.mesh);
+    }
+    createMesh(){
+        const group = new THREE.Group();
+        const cone = new THREE.Mesh(new THREE.ConeGeometry(0.35,0.8,16), new THREE.MeshStandardMaterial({ color:this.color, roughness:0.3 }));
+        cone.position.y=0.4; cone.castShadow=true; group.add(cone);
+        const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.25,16,16), new THREE.MeshStandardMaterial({ color:this.color, roughness:0.3 }));
+        sphere.position.y=0.9; sphere.castShadow=true; group.add(sphere);
+        return group;
+    }
+    moveTo(targetPos, onComplete){
+        audio.playMove();
+        gsap.to(this.mesh.position, { x:targetPos.x, z:targetPos.z, duration:0.4, ease:"power2.out", onComplete });
+        gsap.to(this.mesh.position, { y:1.5, duration:0.2, yoyo:true, repeat:1, ease:"power2.out" });
+    }
+    returnHome(){
+        audio.playCapture();
+        this.pathIndex=-1; this.homeColumnIndex=-1; this.finished=false; this.mesh.visible=true;
+        gsap.to(this.mesh.position, { x:this.homePos.x, y:0.5, z:this.homePos.z, duration:0.5 });
+    }
+    highlight(active){
+        if(active) gsap.to(this.mesh.position, { y:0.8, duration:0.3, yoyo:true, repeat:-1, ease:"power1.inOut" });
+        else { gsap.killTweensOf(this.mesh.position); this.mesh.position.y=0.5; }
+    }
+}
+
+// ============== GAME STATE ==============
+let selectedMode = null;
+const STATE = {
+    gameMode:null, difficulty:'normal', diceMode:'double', playerNames:[], controlMapping:{}, aiPlayers:[],
+    players:[], currentPlayerIndex:0, diceValues:[null,null], diceUsed:[false,false], selectedDice:null,
+    phase:'ROLL', consecutiveDoubleSixes:0, gameStarted:false, capturedThisTurn:false, aiIsPlaying:false
+};
+
+function initPlayers(){
+    const markerOffset = CELL*1.2;
+    const centers = [
+        {x:(0+3-7.5)*CELL, z:(0+3-7.5)*CELL},
+        {x:(9+3-7.5)*CELL, z:(0+3-7.5)*CELL},
+        {x:(9+3-7.5)*CELL, z:(9+3-7.5)*CELL},
+        {x:(0+3-7.5)*CELL, z:(9+3-7.5)*CELL}
+    ];
+    const homePositions = centers.map(c=>[
+        {x:c.x-markerOffset, z:c.z-markerOffset},
+        {x:c.x+markerOffset, z:c.z-markerOffset},
+        {x:c.x-markerOffset, z:c.z+markerOffset},
+        {x:c.x+markerOffset, z:c.z+markerOffset}
+    ]);
+    PLAYER_NAMES.forEach((name,idx)=>{
+        const player = { name, color:PLAYER_COLORS[idx], pieces:[], finishedCount:0 };
+        for(let i=0;i<4;i++) player.pieces.push(new Piece(PLAYER_COLORS[idx], name, i, homePositions[idx][i]));
+        STATE.players.push(player);
+    });
+}
+
+// Funksionet ndihmëse për lëvizje dhe AI (të plota)
+function getValidMovesForDice(diceVal){
+    if(!diceVal) return [];
+    const controlled = STATE.controlMapping[STATE.currentPlayerIndex];
+    if(!controlled) return [];
+    let valid = [];
+    controlled.forEach(cIdx=>{
+        const player = STATE.players[cIdx];
+        const pName = PLAYER_NAMES[cIdx];
+        const start = START_POSITIONS[pName];
+        player.pieces.forEach(piece=>{
+            if(piece.finished) return;
+            if(piece.pathIndex===-1 && diceVal===6) valid.push(piece);
+            else if(piece.homeColumnIndex>=0 && piece.homeColumnIndex+diceVal<=5) valid.push(piece);
+            else if(piece.pathIndex>=0 && piece.homeColumnIndex===-1){
+                const rel = (piece.pathIndex - start + 52)%52;
+                const newRel = rel + diceVal;
+                if(newRel>=51){
+                    const step = newRel-51;
+                    if(step<=6) valid.push(piece);
+                } else valid.push(piece);
+            }
+        });
+    });
+    return valid;
+}
+function getValidMovesForAnyDice(){
+    const m1 = STATE.diceUsed[0]?[]:getValidMovesForDice(STATE.diceValues[0]);
+    const m2 = STATE.diceUsed[1]?[]:getValidMovesForDice(STATE.diceValues[1]);
+    return [...new Set([...m1,...m2])];
+}
+function advanceToNextPlayer(){
+    const mode = STATE.gameMode;
+    if(mode==='single' || mode==='2p') STATE.currentPlayerIndex = STATE.currentPlayerIndex===0?1:0;
+    else STATE.currentPlayerIndex = (STATE.currentPlayerIndex+1)%4;
+    STATE.aiIsPlaying=false;
+}
+function getPlayerForColor(colorIdx){
+    for(let [pIdx, colors] of Object.entries(STATE.controlMapping)) if(colors.includes(colorIdx)) return parseInt(pIdx);
+    return -1;
+}
+function getAllPiecesAt(pathIndex){
+    let found=[];
+    STATE.players.forEach(p=>p.pieces.forEach(piece=>{ if(piece.pathIndex===pathIndex && !piece.finished) found.push(piece); }));
+    return found;
+}
+function canCapture(piece, diceVal, colorIdx){
+    const pName=PLAYER_NAMES[colorIdx];
+    const start=START_POSITIONS[pName];
+    const myPlayer=getPlayerForColor(colorIdx);
+    if(piece.pathIndex===-1){
+        return getAllPiecesAt(start).some(p=>getPlayerForColor(PLAYER_NAMES.indexOf(p.colorName))!==myPlayer);
+    } else if(piece.pathIndex>=0){
+        const rel=(piece.pathIndex-start+52)%52;
+        const newRel=rel+diceVal;
+        if(newRel<51){
+            const newIdx=(piece.pathIndex+diceVal)%52;
+            if(SAFE_SQUARES.includes(newIdx)) return false;
+            return getAllPiecesAt(newIdx).some(p=>getPlayerForColor(PLAYER_NAMES.indexOf(p.colorName))!==myPlayer);
+        }
+    }
+    return false;
+}
+function willEnterHome(piece, diceVal, colorIdx){
+    if(piece.pathIndex<0) return false;
+    const pName=PLAYER_NAMES[colorIdx];
+    const start=START_POSITIONS[pName];
+    const rel=(piece.pathIndex-start+52)%52;
+    const newRel=rel+diceVal;
+    return newRel>=51 && newRel<=57;
+}
+function getPieceProgress(piece, colorIdx){
+    if(piece.finished) return 57;
+    if(piece.homeColumnIndex>=0) return 51+piece.homeColumnIndex;
+    if(piece.pathIndex>=0){
+        const pName=PLAYER_NAMES[colorIdx];
+        const start=START_POSITIONS[pName];
+        return (piece.pathIndex-start+52)%52;
+    }
+    return 0;
+}
+function willLandOnSafe(piece, diceVal, colorIdx){
+    if(piece.pathIndex<0){
+        const pName=PLAYER_NAMES[colorIdx];
+        return SAFE_SQUARES.includes(START_POSITIONS[pName]);
+    } else if(piece.pathIndex>=0){
+        const newIdx=(piece.pathIndex+diceVal)%52;
+        return SAFE_SQUARES.includes(newIdx);
+    }
+    return false;
+}
+async function animateDiceRoll(){
+    return new Promise(resolve=>{
+        let rolls=0;
+        const d1=document.getElementById('dice-1'), d2=document.getElementById('dice-2');
+        d1.classList.add('rolling'); d2.classList.add('rolling');
+        const iv=setInterval(()=>{
+            d1.textContent=Math.floor(Math.random()*6)+1;
+            d2.textContent=Math.floor(Math.random()*6)+1;
+            rolls++;
+            if(rolls>8){ clearInterval(iv); d1.classList.remove('rolling'); d2.classList.remove('rolling'); resolve(); }
+        },60);
+    });
+}
+function delay(ms){ return new Promise(r=>setTimeout(r,ms)); }
+function logMessage(msg){
+    const logDiv=document.getElementById('message-log');
+    const entry=document.createElement('div'); entry.className='log-entry'; entry.textContent=msg;
+    logDiv.insertBefore(entry,logDiv.firstChild);
+    while(logDiv.children.length>5) logDiv.removeChild(logDiv.lastChild);
+}
+function updateUI(){
+    const pName=STATE.playerNames[STATE.currentPlayerIndex]||'Lojtar';
+    const controlled=STATE.controlMapping[STATE.currentPlayerIndex]||[0];
+    const firstColor=STATE.players[controlled[0]];
+    document.getElementById('player-name').textContent=pName+(STATE.gameMode!=='4p'?` (${controlled.map(i=>PLAYER_NAMES[i]).join('+')})`:'');
+    document.getElementById('player-dot').style.background=firstColor?`#${firstColor.color.toString(16)}`:'#E53935';
+    const status=STATE.phase==='AI_TURN'?'🤖 AI po mendon...':(STATE.phase==='ROLL'?'Rrotulloni zarin...':'Zgjidhni pjesën...');
+    document.getElementById('turn-status').textContent=status;
+    STATE.players.forEach((p,i)=>{
+        const fin=p.pieces.filter(pc=>pc.finished).length;
+        const el=document.getElementById(`${PLAYER_NAMES[i].toLowerCase()}-count`);
+        if(el) el.textContent=`${fin}/4`;
+    });
+}
+function highlightSelectableDice(){
+    const d1=document.getElementById('dice-1'), d2=document.getElementById('dice-2');
+    const can1=!STATE.diceUsed[0] && getValidMovesForDice(STATE.diceValues[0]).length>0;
+    const can2=!STATE.diceUsed[1] && getValidMovesForDice(STATE.diceValues[1]).length>0;
+    d1.classList.toggle('selectable',can1); d2.classList.toggle('selectable',can2);
+    d1.classList.toggle('used',STATE.diceUsed[0]); d2.classList.toggle('used',STATE.diceUsed[1]);
+    if(can1 && !can2) selectDice(0);
+    else if(can2 && !can1) selectDice(1);
+}
+function afterMove(){
+    if(STATE.aiIsPlaying){ if(STATE.gameStarted) saveGame(); return; }
+    if(STATE.selectedDice!==null){
+        STATE.diceUsed[STATE.selectedDice]=true;
+        document.getElementById(`dice-${STATE.selectedDice+1}`).classList.add('used');
+    }
+    STATE.selectedDice=null;
+    if(STATE.gameStarted) saveGame();
+    const remaining=getValidMovesForAnyDice();
+    if(remaining.length>0){
+        STATE.phase='SELECT_DICE';
+        highlightSelectableDice();
+        document.getElementById('turn-status').textContent='Përdorni zarin tjetër - klikoni';
+    } else endTurn();
+}
+function endTurn(){
+    STATE.players.forEach(p=>p.pieces.forEach(pc=>pc.highlight(false)));
+    const isSingle=STATE.diceMode==='single';
+    const singleSix=isSingle && STATE.diceValues[0]===6;
+    const doubleSix=!isSingle && STATE.diceValues[0]===6 && STATE.diceValues[1]===6;
+    const captured=STATE.capturedThisTurn;
+    const shouldContinue=(doubleSix && STATE.consecutiveDoubleSixes<3)||singleSix||captured;
+    STATE.capturedThisTurn=false;
+    if(shouldContinue){
+        logMessage(captured?"Rradhë bonus për kapje!":"6! Rradhë shtesë.");
+        if(STATE.aiPlayers.includes(STATE.currentPlayerIndex)){
+            STATE.diceValues=[null,null]; STATE.diceUsed=[false,false];
+            setTimeout(()=>aiTakeTurn(),1000);
+            return;
+        }
+    } else {
+        STATE.consecutiveDoubleSixes=0;
+        advanceToNextPlayer();
+    }
+    STATE.diceValues=[null,null]; STATE.diceUsed=[false,false]; STATE.phase='ROLL';
+    document.getElementById('roll-btn').disabled=false;
+    document.getElementById('dice-1').textContent='?'; document.getElementById('dice-2').textContent='?';
+    document.getElementById('dice-1').classList.remove('used','selectable');
+    document.getElementById('dice-2').classList.remove('used','selectable');
+    updateUI();
+    if(STATE.aiPlayers.includes(STATE.currentPlayerIndex) && !STATE.aiIsPlaying){
+        STATE.aiIsPlaying=true; setTimeout(()=>aiTakeTurn(),1000);
+    }
+}
+async function aiTakeTurn(){
+    STATE.aiIsPlaying=true; STATE.phase='AI_TURN';
+    document.getElementById('turn-status').textContent='🤖 AI po mendon...';
+    document.getElementById('roll-btn').disabled=true;
+    await delay(800+Math.random()*400);
+    STATE.diceUsed=[false,false]; STATE.selectedDice=null; STATE.capturedThisTurn=false;
+    audio.playRoll();
+    await animateDiceRoll();
+    const isSingle=STATE.diceMode==='single';
+    const v1=Math.floor(Math.random()*6)+1;
+    const v2=isSingle?null:Math.floor(Math.random()*6)+1;
+    STATE.diceValues=[v1,v2];
+    document.getElementById('dice-1').textContent=v1;
+    if(isSingle){
+        document.getElementById('dice-2').textContent='-'; document.getElementById('dice-2').classList.add('used'); STATE.diceUsed[1]=true;
+        logMessage(`AI rrotulloi ${v1}`);
+        if(v1===6) logMessage("AI mori 6! Rradhë bonus.");
+    } else {
+        document.getElementById('dice-2').textContent=v2;
+        logMessage(`AI rrotulloi ${v1} dhe ${v2}`);
+        if(v1===6 && v2===6){
+            STATE.consecutiveDoubleSixes++;
+            if(STATE.consecutiveDoubleSixes>=3){
+                logMessage("Tre 6! AI humb rradhën."); STATE.consecutiveDoubleSixes=0; await delay(1000); endTurn(); return;
+            }
+            logMessage("AI mori dy 6! Rradhë bonus.");
+        } else STATE.consecutiveDoubleSixes=0;
+    }
+    await delay(500);
+    for(let die=0;die<2;die++){
+        if(STATE.diceUsed[die]) continue;
+        const val=STATE.diceValues[die];
+        let moves=getValidMovesForDice(val);
+        if(moves.length){
+            STATE.selectedDice=die;
+            let best=moves[0];
+            for(let m of moves){
+                let score=0;
+                const cIdx=PLAYER_NAMES.indexOf(m.colorName);
+                if(canCapture(m,val,cIdx)) score+=100;
+                if(willEnterHome(m,val,cIdx)) score+=80;
+                if(m.pathIndex===-1 && val===6) score+=60;
+                const prog=getPieceProgress(m,cIdx);
+                score+=prog/2;
+                if(willLandOnSafe(m,val,cIdx)) score+=10;
+                if(score> (best?getPieceProgress(best,cIdx):-1)) best=m;
+            }
+            STATE.phase='MOVE';
+            STATE.diceUsed[die]=true;
+            document.getElementById(`dice-${die+1}`).classList.add('used');
+            tryMovePiece(best);
+            await delay(800);
+        } else {
+            STATE.diceUsed[die]=true;
+            document.getElementById(`dice-${die+1}`).classList.add('used');
+        }
+    }
+    if(getValidMovesForAnyDice().length===0) await delay(500);
+    endTurn();
+}
+function checkWin(){
+    const controlled=STATE.controlMapping[STATE.currentPlayerIndex];
+    let total=0;
+    controlled.forEach(c=>total+=STATE.players[c].finishedCount);
+    if(total>=4*controlled.length){
+        const winner=STATE.playerNames[STATE.currentPlayerIndex];
+        document.getElementById('winner-name').innerText=winner;
+        document.getElementById('win-screen').style.display='flex';
+        audio.playWin();
+        // Thirr fitoren për XP dhe monedha (nëse fituesi është lojtari)
+        if(winner !== 'AI' && winner !== 'AI2' && STATE.currentPlayerIndex===0){
+            if(window.onPlayerWin) window.onPlayerWin();
+        }
+        localStorage.removeItem('ludo_save');
+        return true;
+    }
+    return false;
+}
+function tryMovePiece(piece){
+    const diceVal = STATE.selectedDice!==null ? STATE.diceValues[STATE.selectedDice] : null;
+    if(!diceVal) return;
+    const pieceColorIdx = PLAYER_NAMES.indexOf(piece.colorName);
+    const pName = piece.colorName;
+    const start = START_POSITIONS[pName];
+    const controlled = STATE.controlMapping[STATE.currentPlayerIndex];
+    controlled.forEach(c=>STATE.players[c].pieces.forEach(p=>p.highlight(false)));
+    if(piece.pathIndex===-1 && diceVal===6){
+        piece.pathIndex = start;
+        const coord = PATH_COORDS[start];
+        const pos = getWorldPos(coord.c,coord.r);
+        piece.moveTo(pos, ()=>{ logMessage(`${piece.colorName} hyri në fushë!`); afterMove(); });
+    } else if(piece.pathIndex>=0 && piece.homeColumnIndex===-1){
+        const rel = (piece.pathIndex - start + 52)%52;
+        const newRel = rel + diceVal;
+        if(newRel>=51){
+            const step = newRel-51;
+            if(step<=6){
+                piece.homeColumnIndex = step-1;
+                piece.pathIndex = -2;
+                const coord = HOME_COLUMNS[pName][piece.homeColumnIndex];
+                const pos = getWorldPos(coord.c,coord.r);
+                piece.moveTo(pos, ()=>{
+                    logMessage(`${piece.colorName} hyri në shtëpi!`);
+                    if(piece.homeColumnIndex>=5){
+                        piece.finished=true;
+                        STATE.players[pieceColorIdx].finishedCount++;
+                        logMessage(`${piece.colorName} pjesë në shtëpi! (${STATE.players[pieceColorIdx].finishedCount}/4)`);
+                        if(checkWin()) return;
+                    }
+                    afterMove();
+                });
+            } else { logMessage("Duhet numri i saktë për të hyrë!"); afterMove(); }
+        } else {
+            const newIdx = (piece.pathIndex + diceVal)%52;
+            piece.pathIndex = newIdx;
+            const coord = PATH_COORDS[newIdx];
+            const pos = getWorldPos(coord.c,coord.r);
+            // Kontrollo kapje
+            if(!SAFE_SQUARES.includes(newIdx)){
+                for(let i=0;i<STATE.players.length;i++){
+                    for(let p of STATE.players[i].pieces){
+                        if(p.pathIndex===newIdx && !p.finished && p.colorName!==piece.colorName){
+                            p.returnHome();
+                            STATE.capturedThisTurn=true;
+                            logMessage(`${piece.colorName} kapi ${p.colorName}!`);
+                            break;
+                        }
+                    }
+                }
+            }
+            piece.moveTo(pos, ()=>{ afterMove(); });
+        }
+    } else if(piece.homeColumnIndex>=0){
+        const newHome = piece.homeColumnIndex + diceVal;
+        if(newHome<=5){
+            piece.homeColumnIndex = newHome;
+            const coord = HOME_COLUMNS[pName][piece.homeColumnIndex];
+            const pos = getWorldPos(coord.c,coord.r);
+            piece.moveTo(pos, ()=>{
+                if(piece.homeColumnIndex>=5){
+                    piece.finished=true;
+                    STATE.players[pieceColorIdx].finishedCount++;
+                    if(checkWin()) return;
+                }
+                afterMove();
+            });
+        } else { logMessage("Duhet numri i saktë!"); afterMove(); }
+    }
+}
+function saveGame(){
+    const data = { gameMode:STATE.gameMode, difficulty:STATE.difficulty, diceMode:STATE.diceMode, playerNames:STATE.playerNames, controlMapping:STATE.controlMapping, aiPlayers:STATE.aiPlayers, currentPlayerIndex:STATE.currentPlayerIndex, pieces:[] };
+    STATE.players.forEach((p,ci)=>p.pieces.forEach((pc,pi)=>data.pieces.push({colorIndex:ci,pieceId:pi,pathIndex:pc.pathIndex,homeColumnIndex:pc.homeColumnIndex,finished:pc.finished})));
+    localStorage.setItem('ludo_save',JSON.stringify(data));
+}
+function restoreGameState(data){
+    STATE.gameMode=data.gameMode; STATE.difficulty=data.difficulty||'normal'; STATE.diceMode=data.diceMode||'double';
+    STATE.playerNames=data.playerNames; STATE.controlMapping=data.controlMapping; STATE.aiPlayers=data.aiPlayers;
+    STATE.currentPlayerIndex=data.currentPlayerIndex; STATE.aiIsPlaying=false;
+    STATE.diceValues=[null,null]; STATE.diceUsed=[false,false]; STATE.consecutiveDoubleSixes=0;
+    selectedMode=data.gameMode;
+    if(!STATE.gameStarted){ initPlayers(); createBoard(); STATE.gameStarted=true; }
+    data.pieces.forEach(pd=>{
+        const piece=STATE.players[pd.colorIndex].pieces[pd.pieceId];
+        piece.pathIndex=pd.pathIndex; piece.homeColumnIndex=pd.homeColumnIndex; piece.finished=pd.finished;
+        if(piece.finished) piece.mesh.visible=false;
+        else if(piece.homeColumnIndex>=0){
+            const coord=HOME_COLUMNS[PLAYER_NAMES[pd.colorIndex]][piece.homeColumnIndex];
+            const pos=getWorldPos(coord.c,coord.r);
+            piece.mesh.position.set(pos.x,0.5,pos.z);
+        } else if(piece.pathIndex>=0){
+            const coord=PATH_COORDS[piece.pathIndex];
+            const pos=getWorldPos(coord.c,coord.r);
+            piece.mesh.position.set(pos.x,0.5,pos.z);
+        }
+    });
+    updateUI();
+}
+function startGame(){
+    document.getElementById('name-screen').style.display='none';
+    document.getElementById('menu-screen').style.display='none';
+    document.getElementById('game-ui').classList.add('show');
+    if(!STATE.gameStarted){ initPlayers(); createBoard(); STATE.gameStarted=true; }
+    const dice2=document.getElementById('dice-2');
+    if(STATE.diceMode==='single') dice2.style.display='none'; else dice2.style.display='flex';
+    STATE.phase='ROLL'; STATE.diceValues=[null,null]; STATE.diceUsed=[false,false];
+    document.getElementById('roll-btn').disabled=false;
+    updateUI();
+    if(STATE.aiPlayers.includes(STATE.currentPlayerIndex)) setTimeout(()=>aiTakeTurn(),1000);
+}
+window.selectMode=function(mode){
+    selectedMode=mode;
+    const container=document.getElementById('name-inputs-container');
+    container.innerHTML='';
+    let num=mode==='single'?1:(mode==='2p'?2:4);
+    for(let i=0;i<num;i++){
+        const grp=document.createElement('div'); grp.className='name-input-group';
+        const lab=document.createElement('label'); lab.className='name-input-label'; lab.innerText=mode==='single'?'Emri juaj':`Lojtari ${i+1}`;
+        const inp=document.createElement('input'); inp.type='text'; inp.className='name-input'; inp.placeholder=`Lojtari ${i+1}`;
+        grp.appendChild(lab); grp.appendChild(inp); container.appendChild(grp);
+    }
+    document.getElementById('difficulty-selector').style.display=mode==='single'?'flex':'none';
+    document.getElementById('menu-screen').style.display='none';
+    document.getElementById('name-screen').style.display='flex';
+};
+window.startGameWithNames=function(){
+    const inputs=document.querySelectorAll('.name-input');
+    const names=[];
+    inputs.forEach(inp=>{ let n=inp.value.trim(); if(!n) n=inp.placeholder; names.push(n); });
+    STATE.playerNames=names; STATE.gameMode=selectedMode;
+    if(selectedMode==='single'){
+        STATE.controlMapping={0:[0,2],1:[1,3]}; STATE.playerNames[1]='AI'; STATE.aiPlayers=[1];
+    } else if(selectedMode==='2p'){
+        STATE.controlMapping={0:[0,2],1:[1,3]}; STATE.aiPlayers=[];
+    } else {
+        STATE.controlMapping={0:[0],1:[1],2:[2],3:[3]}; STATE.aiPlayers=[];
+    }
+    const diffBtn=document.querySelector('#difficulty-selector .difficulty-btn.selected');
+    if(diffBtn) STATE.difficulty=diffBtn.getAttribute('onclick')?.match(/'(\w+)'/)?.[1]||'normal';
+    const diceBtn=document.querySelector('#dice-mode-selector .difficulty-btn.selected');
+    if(diceBtn) STATE.diceMode=diceBtn.getAttribute('onclick')?.match(/'(\w+)'/)?.[1]||'double';
+    startGame();
+};
+window.backToMenu=function(){ location.reload(); };
+window.goHome=function(){ if(confirm('Kthehu në menu? Lojën do ta ruajë.')){ saveGame(); location.reload(); } };
+window.saveAndQuit=function(){ saveGame(); location.reload(); };
+window.restartGame=function(){ location.reload(); };
+window.showHelp=function(){ document.getElementById('help-modal').style.display='flex'; };
+window.hideHelp=function(){ document.getElementById('help-modal').style.display='none'; };
+window.toggleControls=function(){
+    const btns=document.getElementById('controls-buttons');
+    const toggle=document.getElementById('controls-toggle');
+    if(btns.style.display==='none'){ btns.style.display='flex'; toggle.style.transform='rotate(180deg)'; }
+    else{ btns.style.display='none'; toggle.style.transform='rotate(0deg)'; }
+};
+window.takeScreenshot=function(){
+    renderer.render(scene,camera);
+    const dataUrl=renderer.domElement.toDataURL('image/png');
+    const link=document.createElement('a'); link.download=`ludo-screenshot-${Date.now()}.png`; link.href=dataUrl; link.click();
+    logMessage('Screenshot saved!');
+};
+window.shareGame=function(){
+    if(navigator.share) navigator.share({ title:'Ludo Alb King', text:'Luaj Ludo 3D!', url:window.location.href });
+    else navigator.clipboard.writeText(window.location.href).then(()=>logMessage('Link copied!'));
+};
+window.zoomIn=function(){ camera.position.multiplyScalar(0.9); camera.updateProjectionMatrix(); };
+window.zoomOut=function(){ camera.position.multiplyScalar(1.1); camera.updateProjectionMatrix(); };
+window.setDifficulty=function(level){ STATE.difficulty=level; };
+window.setDiceMode=function(mode){ STATE.diceMode=mode; };
+window.resumeGame=function(){
+    const saved=localStorage.getItem('ludo_save');
+    if(saved){ restoreGameState(JSON.parse(saved)); startGame(); }
+};
+function checkForSavedGame(){
+    if(localStorage.getItem('ludo_save')) document.getElementById('resume-btn').style.display='block';
+}
+// Eventet e klikimeve dhe prekjeve (për pjesët)
+const raycaster=new THREE.Raycaster(); const mouse=new THREE.Vector2();
+function handleInteraction(clientX,clientY){
+    if(STATE.phase!=='MOVE') return;
+    mouse.x=(clientX/renderer.domElement.clientWidth)*2-1;
+    mouse.y=-(clientY/renderer.domElement.clientHeight)*2+1;
+    raycaster.setFromCamera(mouse,camera);
+    const intersects=raycaster.intersectObjects(piecesGroup.children,true);
+    if(intersects.length){
+        let obj=intersects[0].object;
+        while(obj.parent && !obj.userData.owner) obj=obj.parent;
+        if(obj.userData.owner){
+            const piece=obj.userData.owner;
+            const controlled=STATE.controlMapping[STATE.currentPlayerIndex];
+            const pIdx=PLAYER_NAMES.indexOf(piece.colorName);
+            if(controlled.includes(pIdx)) tryMovePiece(piece);
+        }
+    }
+}
+renderer.domElement.addEventListener('click',(e)=>handleInteraction(e.clientX,e.clientY));
+renderer.domElement.addEventListener('touchend',(e)=>{
+    e.preventDefault();
+    if(e.changedTouches.length){ const t=e.changedTouches[0]; handleInteraction(t.clientX,t.clientY); }
+},{passive:false});
+renderer.domElement.addEventListener('touchmove',(e)=>e.preventDefault(),{passive:false});
+window.selectDice=function(idx){
+    if(STATE.phase!=='SELECT_DICE' && STATE.phase!=='MOVE') return;
+    if(STATE.diceUsed[idx]) return;
+    if(getValidMovesForDice(STATE.diceValues[idx]).length===0) return;
+    STATE.selectedDice=idx; STATE.phase='MOVE';
+    document.getElementById('dice-1').classList.toggle('selectable',idx===0);
+    document.getElementById('dice-2').classList.toggle('selectable',idx===1);
+    const valid=getValidMovesForDice(STATE.diceValues[idx]);
+    STATE.players.forEach(p=>p.pieces.forEach(pc=>pc.highlight(false)));
+    valid.forEach(p=>p.highlight(true));
+    document.getElementById('turn-status').textContent=`Zari ${idx+1} (${STATE.diceValues[idx]}) - Zgjidhni pjesën`;
+};
+window.rollDice=function(){
+    if(STATE.phase!=='ROLL') return;
+    audio.playRoll();
+    STATE.phase='WAITING';
+    document.getElementById('roll-btn').disabled=true;
+    STATE.diceUsed=[false,false]; STATE.selectedDice=null; STATE.capturedThisTurn=false;
+    let rolls=0;
+    const d1=document.getElementById('dice-1'), d2=document.getElementById('dice-2');
+    d1.classList.add('rolling'); d2.classList.add('rolling');
+    d1.classList.remove('used','selectable'); d2.classList.remove('used','selectable');
+    const iv=setInterval(()=>{
+        d1.textContent=Math.floor(Math.random()*6)+1;
+        d2.textContent=Math.floor(Math.random()*6)+1;
+        rolls++;
+        if(rolls>12){
+            clearInterval(iv);
+            d1.classList.remove('rolling'); d2.classList.remove('rolling');
+            const v1=parseInt(d1.textContent);
+            const v2=STATE.diceMode==='single'?null:parseInt(d2.textContent);
+            STATE.diceValues=[v1,v2];
+            if(STATE.diceMode==='single'){ d2.textContent='-'; d2.classList.add('used'); STATE.diceUsed[1]=true; logMessage(`Rrotulluat ${v1}`); }
+            else logMessage(`Rrotulluat ${v1} dhe ${v2}`);
+            animate3DDiceRoll(v1,v2);
+            if(STATE.diceMode!=='single' && v1===6 && v2===6){
+                STATE.consecutiveDoubleSixes++;
+                if(STATE.consecutiveDoubleSixes>=3){ logMessage("Tre 6! Humb rradhën."); STATE.consecutiveDoubleSixes=0; setTimeout(()=>endTurn(),1000); return; }
+                logMessage("Dy 6! Rradhë bonus.");
+            } else if(STATE.diceMode==='single' && v1===6) logMessage("6! Rradhë bonus.");
+            else STATE.consecutiveDoubleSixes=0;
+            const valid=getValidMovesForAnyDice();
+            if(valid.length===0){ logMessage("Asnjë lëvizje."); setTimeout(()=>endTurn(),1000); }
+            else { STATE.phase='SELECT_DICE'; highlightSelectableDice(); document.getElementById('turn-status').textContent='Klikoni mbi zarin, pastaj mbi pjesën'; }
+        }
+    },60);
+};
+// Animacioni
+function animate(){ requestAnimationFrame(animate); controls.update(); renderer.render(scene,camera); }
+animate();
+window.addEventListener('resize',()=>{
+    camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
+});
+checkForSavedGame();
+setTimeout(()=>{ document.getElementById('loading-screen').style.opacity='0'; setTimeout(()=>document.getElementById('loading-screen').style.display='none',500); },1500);// ============== SHTESAT E REJA (PROFILE, STORE, CHAT, XP, COINS) ==============
+let playerData = {
+    name: "Lojtari",
+    level: 1,
+    xp: 0,
+    coins: 100,
+    wins: 0
+};
+
+function loadPlayerData() {
+    const saved = localStorage.getItem("ludo_player");
+    if(saved) playerData = JSON.parse(saved);
+    updatePlayerUI();
+}
+function savePlayerData() { localStorage.setItem("ludo_player", JSON.stringify(playerData)); }
+function updatePlayerUI() {
+    document.getElementById("playerNameDisplay").innerText = playerData.name;
+    document.getElementById("playerLevelDisplay").innerText = `Niveli ${playerData.level}`;
+    document.getElementById("coinDisplay").innerHTML = `🪙 ${playerData.coins}`;
+    document.getElementById("modalPlayerName").innerText = playerData.name;
+    document.getElementById("modalPlayerLevel").innerText = playerData.level;
+    document.getElementById("modalPlayerXp").innerText = playerData.xp;
+    document.getElementById("modalPlayerCoins").innerText = playerData.coins;
+    document.getElementById("modalPlayerWins").innerText = playerData.wins;
+}
+function addXP(amount) {
+    playerData.xp += amount;
+    while(playerData.xp >= 100) {
+        playerData.xp -= 100;
+        playerData.level++;
+        showNotification(`🎉 Niveli ${playerData.level} arritur!`, "gold");
+    }
+    savePlayerData(); updatePlayerUI();
+}
+function addCoins(amount) {
+    playerData.coins += amount;
+    savePlayerData(); updatePlayerUI();
+    showNotification(`+${amount} 🪙`, "green");
+}
+function showNotification(msg, color) {
+    const notif = document.createElement("div");
+    notif.innerText = msg;
+    notif.style.position = "fixed"; notif.style.bottom = "100px"; notif.style.left = "50%";
+    notif.style.transform = "translateX(-50%)"; notif.style.backgroundColor = color==="gold"?"#F9D423":"#4CAF50";
+    notif.style.color = "#1e2a2e"; notif.style.padding = "8px 20px"; notif.style.borderRadius = "30px";
+    notif.style.zIndex = "2000"; notif.style.fontWeight = "bold";
+    document.body.appendChild(notif);
+    setTimeout(() => notif.remove(), 2000);
+}
+window.sendChatMessage = function() {
+    const input = document.getElementById("chatInput");
+    if(!input.value.trim()) return;
+    const msg = input.value;
+    const chatDiv = document.getElementById("chatMessages");
+    chatDiv.innerHTML += `<div><i class="fas fa-comment"></i> ${playerData.name}: ${msg}</div>`;
+    input.value = "";
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+};
+window.openProfileModal = function() { document.getElementById("profileModal").style.display = "flex"; };
+window.openStoreModal = function() {
+    const storeDiv = document.getElementById("storeItems");
+    storeDiv.innerHTML = `<div class="store-item"><span>Skin i Kuq (për pjesët)</span><button onclick="buySkin('red')">50 🪙</button></div>
+                         <div class="store-item"><span>Skin i Artë (për tabelën)</span><button onclick="buySkin('gold')">100 🪙</button></div>
+                         <div class="store-item"><span>Paketa e monedhave (100)</span><button onclick="buyCoins(100)">50 🪙</button></div>`;
+    document.getElementById("storeModal").style.display = "flex";
+};
+window.buySkin = function(skin) {
+    if(skin === "red" && playerData.coins >= 50) {
+        playerData.coins -= 50; savePlayerData(); updatePlayerUI();
+        showNotification("Skin i kuq blerë! Përdoret automatikisht.", "gold");
+        // Apliko skin te pjesët (ndrysho ngjyrën e konit)
+        STATE.players.forEach(p=>{
+            p.pieces.forEach(piece=>{
+                piece.mesh.children[0].material.color.setHex(0xFF4444);
+                piece.mesh.children[1].material.color.setHex(0xFF4444);
+            });
+        });
+    } else if(skin === "gold" && playerData.coins >= 100) {
+        playerData.coins -= 100; savePlayerData(); updatePlayerUI();
+        showNotification("Skin i artë blerë! Tabela shkëlqen.", "gold");
+        // Efekt i thjeshtë: ndrysho ngjyrën e tabelës
+        boardGroup.children.forEach(child=>{
+            if(child.material) child.material.color.setHex(0xFFD700);
+        });
+    } else showNotification("Monedha të pamjaftueshme!", "red");
+};
+window.buyCoins = function(amount) {
+    if(playerData.coins >= 50) {
+        playerData.coins -= 50;
+        playerData.coins += amount;
+        savePlayerData(); updatePlayerUI();
+        showNotification(`Blevë ${amount} 🪙!`, "green");
+    } else showNotification("Nuk ke mjaft monedha për të blerë!", "red");
+};
+window.closeModal = function(id) { document.getElementById(id).style.display = "none"; };
+window.toggleSound = function() {
+    if(audio.enabled) { audio.enabled = false; document.getElementById("soundIcon").classList.remove("fa-volume-up"); document.getElementById("soundIcon").classList.add("fa-volume-mute"); }
+    else { audio.enabled = true; document.getElementById("soundIcon").classList.remove("fa-volume-mute"); document.getElementById("soundIcon").classList.add("fa-volume-up"); }
+};
+window.onPlayerWin = function() {
+    addXP(50);
+    addCoins(100);
+    playerData.wins++;
+    savePlayerData();
+    updatePlayerUI();
+    showNotification("Fituat! +50 XP, +100 🪙", "gold");
+};
+// Ngarko profilin kur fillon
+loadPlayerData();
+// Siguro që menuja e kontrollit të fshihet fillimisht
+document.getElementById('controls-buttons').style.display = 'none';
+// Përfundimi i skedarit
+console.log("LUDO ALB KING PREMIUM - Plotësisht funksional");
+</script>
 </body>
 </html>
