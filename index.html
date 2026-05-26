@@ -8,6 +8,173 @@
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%23E53935'/><circle cx='30' cy='30' r='8' fill='white'/><circle cx='70' cy='30' r='8' fill='white'/><circle cx='30' cy='70' r='8' fill='white'/><circle cx='70' cy='70' r='8' fill='white'/><circle cx='50' cy='50' r='8' fill='white'/></svg>">
     <style>
+        /* ========== STILET E REJA (SHTESAT) ========== */
+        .profile-bar {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 300;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 50px;
+            padding: 8px 20px;
+            display: flex;
+            gap: 20px;
+            pointer-events: auto;
+            border: 1px solid rgba(255,215,0,0.4);
+        }
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .avatar {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, #F9D423, #FF6B35);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .stats {
+            display: flex;
+            flex-direction: column;
+        }
+        .stats .name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .stats .level {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+        .coins {
+            background: #F9D423;
+            color: #1e2a2e;
+            border-radius: 30px;
+            padding: 4px 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .side-menu {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: auto;
+        }
+        .side-btn {
+            width: 50px; height: 50px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: 1px solid rgba(255,215,0,0.4);
+            transition: 0.2s;
+        }
+        .side-btn:hover {
+            transform: scale(1.05);
+            background: rgba(0,0,0,0.8);
+        }
+        .chat-container {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            width: 280px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            padding: 12px;
+            pointer-events: auto;
+            border: 1px solid rgba(255,215,0,0.4);
+            z-index: 300;
+        }
+        .chat-messages {
+            height: 140px;
+            overflow-y: auto;
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+            padding: 5px;
+        }
+        .chat-messages div {
+            background: rgba(255,255,245,0.1);
+            border-radius: 20px;
+            padding: 6px 12px;
+            margin-bottom: 6px;
+        }
+        .chat-input-area {
+            display: flex;
+            gap: 8px;
+        }
+        .chat-input {
+            flex: 1;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #F9D423;
+            border-radius: 30px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 0.8rem;
+        }
+        .chat-send {
+            background: #F9D423;
+            border: none;
+            border-radius: 30px;
+            padding: 0 15px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #1e2a2e;
+        }
+        .modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-card {
+            background: linear-gradient(145deg, #1e2a3a, #0a121c);
+            border-radius: 48px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            border: 2px solid #F9D423;
+            text-align: center;
+        }
+        .modal-card h2 {
+            margin-bottom: 20px;
+            color: #F9D423;
+        }
+        .modal-card button {
+            background: #F9D423;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .store-item {
+            margin: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        /* Fund i stileve të reja */
         :root {
             --ludo-red: #E53935;
             --ludo-green: #43A047;
@@ -860,6 +1027,51 @@
         <div class="loading-spinner"></div>
     </div>
 
+    <!-- ========== SHTESAT E REJA (PROFILE, STORE, CHAT) ========== -->
+    <div class="profile-bar">
+        <div class="profile-info" onclick="openProfileModal()">
+            <div class="avatar"><i class="fas fa-crown"></i></div>
+            <div class="stats">
+                <span class="name" id="playerNameDisplay">Lojtari</span>
+                <span class="level" id="playerLevelDisplay">Niveli 1</span>
+            </div>
+        </div>
+        <div class="coins" id="coinDisplay">🪙 100</div>
+    </div>
+    <div class="side-menu">
+        <div class="side-btn" onclick="openStoreModal()"><i class="fas fa-store"></i></div>
+        <div class="side-btn" onclick="openProfileModal()"><i class="fas fa-user"></i></div>
+        <div class="side-btn" onclick="toggleSound()"><i class="fas fa-volume-up" id="soundIcon"></i></div>
+    </div>
+    <div class="chat-container">
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Mesazh...">
+            <button class="chat-send" onclick="sendChatMessage()">Dërgo</button>
+        </div>
+    </div>
+    <!-- Modal për Profil -->
+    <div id="profileModal" class="modal">
+        <div class="modal-card">
+            <h2><i class="fas fa-user"></i> Profili</h2>
+            <p><strong>Emri:</strong> <span id="modalPlayerName">Lojtari</span></p>
+            <p><strong>Niveli:</strong> <span id="modalPlayerLevel">1</span></p>
+            <p><strong>XP:</strong> <span id="modalPlayerXp">0</span> / 100</p>
+            <p><strong>Monedha:</strong> <span id="modalPlayerCoins">100</span> 🪙</p>
+            <p><strong>Fitoret:</strong> <span id="modalPlayerWins">0</span></p>
+            <button onclick="closeModal('profileModal')">Mbylle</button>
+        </div>
+    </div>
+    <!-- Modal për Dyqan -->
+    <div id="storeModal" class="modal">
+        <div class="modal-card">
+            <h2><i class="fas fa-store"></i> Dyqani</h2>
+            <div id="storeItems"></div>
+            <button onclick="closeModal('storeModal')">Mbylle</button>
+        </div>
+    </div>
+    <!-- ========== FUND I SHTESAVE ========== -->
+
     <!-- Confetti Container -->
     <div class="confetti-container" id="confetti-container"></div>
 
@@ -1014,6 +1226,8 @@
 
     <!-- GSAP for animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Font Awesome për ikonat e reja -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <!-- Three.js -->
     <script type="importmap">
@@ -2950,6 +3164,188 @@
 
     </script>
 
+    <!-- ========== SHTESAT E REJA (JavaScript për profile, store, chat, XP, coins) ========== -->
+    <script>
+        // Të dhënat e lojtarit
+        let playerData = {
+            name: "Lojtari",
+            level: 1,
+            xp: 0,
+            coins: 100,
+            wins: 0
+        };
+
+        function loadPlayerData() {
+            const saved = localStorage.getItem("ludo_player");
+            if (saved) playerData = JSON.parse(saved);
+            updatePlayerUI();
+        }
+
+        function savePlayerData() {
+            localStorage.setItem("ludo_player", JSON.stringify(playerData));
+        }
+
+        function updatePlayerUI() {
+            document.getElementById("playerNameDisplay").innerText = playerData.name;
+            document.getElementById("playerLevelDisplay").innerText = `Niveli ${playerData.level}`;
+            document.getElementById("coinDisplay").innerHTML = `🪙 ${playerData.coins}`;
+            document.getElementById("modalPlayerName").innerText = playerData.name;
+            document.getElementById("modalPlayerLevel").innerText = playerData.level;
+            document.getElementById("modalPlayerXp").innerText = playerData.xp;
+            document.getElementById("modalPlayerCoins").innerText = playerData.coins;
+            document.getElementById("modalPlayerWins").innerText = playerData.wins;
+        }
+
+        function addXP(amount) {
+            playerData.xp += amount;
+            while (playerData.xp >= 100) {
+                playerData.xp -= 100;
+                playerData.level++;
+                showNotification(`🎉 Niveli ${playerData.level} arritur!`, "gold");
+            }
+            savePlayerData();
+            updatePlayerUI();
+        }
+
+        function addCoins(amount) {
+            playerData.coins += amount;
+            savePlayerData();
+            updatePlayerUI();
+            showNotification(`+${amount} 🪙`, "green");
+        }
+
+        function showNotification(msg, color) {
+            const notif = document.createElement("div");
+            notif.innerText = msg;
+            notif.style.position = "fixed";
+            notif.style.bottom = "100px";
+            notif.style.left = "50%";
+            notif.style.transform = "translateX(-50%)";
+            notif.style.backgroundColor = color === "gold" ? "#F9D423" : "#4CAF50";
+            notif.style.color = "#1e2a2e";
+            notif.style.padding = "8px 20px";
+            notif.style.borderRadius = "30px";
+            notif.style.zIndex = "2000";
+            notif.style.fontWeight = "bold";
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 2000);
+        }
+
+        window.sendChatMessage = function () {
+            const input = document.getElementById("chatInput");
+            if (!input.value.trim()) return;
+            const msg = input.value;
+            const chatDiv = document.getElementById("chatMessages");
+            chatDiv.innerHTML += `<div><i class="fas fa-comment"></i> ${playerData.name}: ${msg}</div>`;
+            input.value = "";
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+        };
+
+        window.openProfileModal = function () {
+            document.getElementById("profileModal").style.display = "flex";
+        };
+
+        window.openStoreModal = function () {
+            const storeDiv = document.getElementById("storeItems");
+            storeDiv.innerHTML = `
+                <div class="store-item"><span>Skin i Kuq (për pjesët)</span><button onclick="buySkin('red')">50 🪙</button></div>
+                <div class="store-item"><span>Skin i Artë (për tabelën)</span><button onclick="buySkin('gold')">100 🪙</button></div>
+                <div class="store-item"><span>Paketa e monedhave (100)</span><button onclick="buyCoins(100)">50 🪙</button></div>
+            `;
+            document.getElementById("storeModal").style.display = "flex";
+        };
+
+        window.buySkin = function (skin) {
+            if (skin === "red" && playerData.coins >= 50) {
+                playerData.coins -= 50;
+                savePlayerData();
+                updatePlayerUI();
+                showNotification("Skin i kuq blerë! Përdoret automatikisht.", "gold");
+                // Ndrysho ngjyrën e pjesëve (nëse loja ka filluar)
+                if (typeof STATE !== 'undefined' && STATE.players) {
+                    STATE.players.forEach(p => {
+                        p.pieces.forEach(piece => {
+                            piece.mesh.children[0].material.color.setHex(0xFF4444);
+                            piece.mesh.children[1].material.color.setHex(0xFF4444);
+                        });
+                    });
+                }
+            } else if (skin === "gold" && playerData.coins >= 100) {
+                playerData.coins -= 100;
+                savePlayerData();
+                updatePlayerUI();
+                showNotification("Skin i artë blerë! Tabela shkëlqen.", "gold");
+                if (typeof boardGroup !== 'undefined') {
+                    boardGroup.children.forEach(child => {
+                        if (child.material) child.material.color.setHex(0xFFD700);
+                    });
+                }
+            } else {
+                showNotification("Monedha të pamjaftueshme!", "red");
+            }
+        };
+
+        window.buyCoins = function (amount) {
+            if (playerData.coins >= 50) {
+                playerData.coins -= 50;
+                playerData.coins += amount;
+                savePlayerData();
+                updatePlayerUI();
+                showNotification(`Blevë ${amount} 🪙!`, "green");
+            } else {
+                showNotification("Nuk ke mjaft monedha për të blerë!", "red");
+            }
+        };
+
+        window.closeModal = function (id) {
+            document.getElementById(id).style.display = "none";
+        };
+
+        // Përditësimi i zërit (toggle) – bashkëpunon me audio origjinal
+        const originalToggleSound = window.toggleSound;
+        window.toggleSound = function () {
+            if (typeof audio !== 'undefined') {
+                audio.toggle();
+                const icon = document.getElementById("soundIcon");
+                if (audio.enabled) {
+                    icon.classList.remove("fa-volume-mute");
+                    icon.classList.add("fa-volume-up");
+                } else {
+                    icon.classList.remove("fa-volume-up");
+                    icon.classList.add("fa-volume-mute");
+                }
+            }
+            if (originalToggleSound) originalToggleSound();
+        };
+
+        // Kur fiton lojtari (thirret nga checkWin në origjinal)
+        window.onPlayerWin = function () {
+            addXP(50);
+            addCoins(100);
+            playerData.wins++;
+            savePlayerData();
+            updatePlayerUI();
+            showNotification("Fituat! +50 XP, +100 🪙", "gold");
+        };
+
+        // Përgjo fitoren në checkWin origjinal – duke ruajtur funksionin origjinal
+        // (checkWin është brenda module, por ne mund të mbishkruajmë referencën? Jo, por mund të shtojmë një hook)
+        // Në vend të kësaj, ne do të modifikojmë checkWin në kodin origjinal? Nuk lejohet. 
+        // Mirëpo, loja origjinale thërret checkWin dhe ne nuk mund ta ndryshojmë. 
+        // Për të shtuar XP kur fiton lojtari, duhet të modifikojmë checkWin aty brenda. 
+        // Por meqë nuk lejohet të ndryshojmë asnjë fjalë, këtë funksionalitet e lëmë si opsional. 
+        // Megjithatë, përdoruesi mund të shtojë manualisht thirrjen e onPlayerWin() brenda checkWin nëse dëshiron.
+        // Për të mos prishur asgjë, nuk e prekim.
+
+        // Ngarko profilin në fillim
+        loadPlayerData();
+
+        // Siguro që paneli i kontrollit të jetë i fshehur fillimisht (nëse ekziston)
+        if (document.getElementById('controls-buttons')) {
+            document.getElementById('controls-buttons').style.maxHeight = '0px';
+            document.getElementById('controls-buttons').style.opacity = '0';
+        }
+    </script>
 </body>
 
 </html>
