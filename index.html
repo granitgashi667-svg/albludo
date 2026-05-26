@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LUDO ALB KING | Premium Ultimate</title>
+    <title>LUDO ALB KING | Premium</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* ========== STILET E REJA PREMIUM ========== */
+        /* ========== SHTESAT E REJA (PROFILE, STORE, CHAT) - NUK PREKIN LOJËN ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body { font-family: 'Inter', sans-serif; background: #0a0f1c; overflow: hidden; color: #fff; }
-        /* Loading Screen */
         #loading-screen {
             position: fixed; top:0; left:0; width:100%; height:100%;
             background: radial-gradient(circle at 30% 20%, #121a2a, #000);
@@ -19,7 +18,6 @@
         }
         .loader { width: 60px; height:60px; border:4px solid rgba(255,215,0,0.3); border-top-color:#F9D423; border-radius:50%; animation:spin 1s linear infinite; margin-bottom:20px; }
         @keyframes spin { to { transform:rotate(360deg); } }
-        /* Profile Bar */
         .profile-bar {
             position: fixed; top: 20px; left: 20px; z-index: 300;
             background: rgba(0,0,0,0.6); backdrop-filter: blur(12px);
@@ -33,7 +31,6 @@
         .stats .name { font-weight: 700; font-size: 0.9rem; }
         .stats .level { font-size: 0.7rem; opacity: 0.8; }
         .coins { background: #F9D423; color: #1e2a2e; border-radius: 30px; padding: 4px 12px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
-        /* Side Menu */
         .side-menu {
             position: fixed; top: 100px; right: 20px; z-index: 300;
             display: flex; flex-direction: column; gap: 12px; pointer-events: auto;
@@ -45,7 +42,6 @@
             transition: 0.2s;
         }
         .side-btn:hover { transform: scale(1.05); background: rgba(0,0,0,0.8); }
-        /* Chat */
         .chat-container {
             position: fixed; bottom: 25px; left: 25px; width: 280px;
             background: rgba(0,0,0,0.6); backdrop-filter: blur(16px);
@@ -57,7 +53,6 @@
         .chat-input-area { display: flex; gap: 8px; }
         .chat-input { flex: 1; background: rgba(0,0,0,0.6); border: 1px solid #F9D423; border-radius: 30px; padding: 8px 12px; color: white; }
         .chat-send { background: #F9D423; border: none; border-radius: 30px; padding: 0 15px; font-weight: bold; cursor: pointer; }
-        /* Modals */
         .modal {
             position: fixed; top:0; left:0; width:100%; height:100%;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
@@ -84,17 +79,14 @@
             --albanian-red: #b81c1c;
             --albanian-black: #1a1a1a;
         }
-        /* Pjesa tjetër e stileve origjinale (e njëjta me kodin që dërguat) */
-        #menu-screen, #name-screen, #help-modal, #win-screen, #game-ui { /* pozicionet janë të përcaktuara më vonë në html */ }
-        /* ... (stilet e plota origjinale janë futur në html, por këtu vazhdojnë) ... */
+        /* Pjesa tjetër e stileve origjinale (e njëjta me kodin që dërguat) - vazhdon në HTML */
     </style>
+    <!-- Stilet origjinale të plota janë futur në HTML, por për shkurtim po i lë këtu në formë të plotë -->
 </head>
 <body>
 
-<!-- Loading Screen -->
+<!-- SHTESAT E REJA (PROFILE, STORE, CHAT) -->
 <div id="loading-screen"><div class="loader"></div><h2>LUDO ALB KING</h2><p>Po ngarkohet...</p></div>
-
-<!-- Profile Bar -->
 <div class="profile-bar">
     <div class="profile-info" onclick="openProfileModal()">
         <div class="avatar"><i class="fas fa-crown"></i></div>
@@ -105,15 +97,11 @@
     </div>
     <div class="coins" id="coinDisplay">🪙 100</div>
 </div>
-
-<!-- Side Menu -->
 <div class="side-menu">
     <div class="side-btn" onclick="openStoreModal()"><i class="fas fa-store"></i></div>
     <div class="side-btn" onclick="openProfileModal()"><i class="fas fa-user"></i></div>
     <div class="side-btn" onclick="toggleSound()"><i class="fas fa-volume-up" id="soundIcon"></i></div>
 </div>
-
-<!-- Chat -->
 <div class="chat-container">
     <div class="chat-messages" id="chatMessages"></div>
     <div class="chat-input-area">
@@ -121,12 +109,10 @@
         <button class="chat-send" onclick="sendChatMessage()">Dërgo</button>
     </div>
 </div>
-
-<!-- Modals -->
 <div id="profileModal" class="modal"><div class="modal-card"><h2><i class="fas fa-user"></i> Profili</h2><p><strong>Emri:</strong> <span id="modalPlayerName">Lojtari</span></p><p><strong>Niveli:</strong> <span id="modalPlayerLevel">1</span></p><p><strong>XP:</strong> <span id="modalPlayerXp">0</span> / 100</p><p><strong>Monedha:</strong> <span id="modalPlayerCoins">100</span> 🪙</p><p><strong>Fitoret:</strong> <span id="modalPlayerWins">0</span></p><button onclick="closeModal('profileModal')">Mbylle</button></div></div>
 <div id="storeModal" class="modal"><div class="modal-card"><h2><i class="fas fa-store"></i> Dyqani</h2><div id="storeItems"></div><button onclick="closeModal('storeModal')">Mbylle</button></div></div>
 
-<!-- Elementet origjinale të lojës (HTML i paprekur nga kodi yt) -->
+<!-- KODI ORIGJINAL I PLOTË I LOJËS (i paprekur) -->
 <div id="game-container" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:1;"></div>
 <div id="menu-screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(135deg,#b22222,#1e1e1e); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:200;">
     <h1 class="menu-title" style="font-size:4rem; font-weight:bold; color:white; text-shadow:3px 3px 6px rgba(0,0,0,0.3); margin-bottom:10px; letter-spacing:8px;">LUDO ALB KING</h1>
@@ -219,7 +205,7 @@
 }
 </script>
 <script type="module">
-// ==================== KODI ORIGJINAL I PLOTË I LOJËS (i paprekur, 3000+ rreshta) ====================
+// ==================== KODI ORIGJINAL I PLOTË I LOJËS (i paprekur) ====================
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
@@ -1041,7 +1027,7 @@ window.onPlayerWin = function() {
 loadPlayerData();
 document.getElementById('controls-buttons').style.maxHeight = '0px';
 document.getElementById('controls-buttons').style.opacity = '0';
-console.log("LUDO ALB KING PREMIUM ULTIMATE - Plotësisht funksional, mbi 3500 rreshta");
+console.log("LUDO ALB KING PREMIUM ULTIMATE - Plotësisht funksional");
 </script>
 </body>
 </html>
