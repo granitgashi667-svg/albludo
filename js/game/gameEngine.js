@@ -166,7 +166,7 @@ const STATE = {
     players:[], currentPlayerIndex:0, diceValues:[null,null], diceUsed:[false,false], selectedDice:null,
     phase:'ROLL', consecutiveDoubleSixes:0, gameStarted:false, capturedThisTurn:false, aiIsPlaying:false
 };
-window.STATE = STATE; // për akses nga modulet e tjera
+window.STATE = STATE;
 
 function initPlayers(){
     const markerOffset = CELL*1.2;
