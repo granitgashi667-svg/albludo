@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>LUDO ALB KING – Luaj 3D</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Po ngarkohet Ludo Alb King...</p>
+    </div>
+
+    <!-- Profile & Coins Panel -->
+    <div id="profile-panel">
+        <div class="profile-card">
+            <i class="fas fa-user-circle"></i>
+            <span id="profile-name">Lojtari</span>
+            <button id="edit-name-btn"><i class="fas fa-pen"></i></button>
+            <div class="coins-display">
+                <i class="fas fa-coins"></i> <span id="coin-amount">100</span>
+            </div>
+            <button id="market-btn" class="btn-market"><i class="fas fa-store"></i> Market</button>
+        </div>
+    </div>
+
+    <!-- Market Modal -->
+    <div id="market-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-gem"></i> Market – Zbukurime</h2>
+            <div class="shop-items">
+                <div class="item" data-cost="50" data-type="skin" data-value="gold">
+                    <span><i class="fas fa-crown"></i> Skina e Artë (50 monedha)</span>
+                    <button class="buy-btn">Bli</button>
+                </div>
+                <div class="item" data-cost="80" data-type="effect" data-value="trail">
+                    <span><i class="fas fa-magic"></i> Efekt zjarri (80 monedha)</span>
+                    <button class="buy-btn">Bli</button>
+                </div>
+            </div>
+            <p class="note">* Blerjet janë demo – nuk përdorin para reale.</p>
+        </div>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="menu-screen">
+        <div class="menu-card">
+            <h1>LUDO ALB KING</h1>
+            <p>3D – Versioni shqiptar</p>
+            <div class="menu-buttons">
+                <button class="btn primary" id="resume-btn" style="display:none;">⏵ Vazhdo lojën</button>
+                <button class="btn primary" onclick="selectMode('single')">🤖 Kundër kompjuterit</button>
+                <button class="btn primary" onclick="selectMode('2p')">👥 2 lojtarë</button>
+                <button class="btn primary" onclick="selectMode('4p')">👥👥 4 lojtarë</button>
+                <button class="btn secondary" onclick="showHelp()">❓ Si të luhet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Name Collection Screen -->
+    <div id="name-screen" style="display:none;">
+        <div class="modal-card">
+            <h2>Shkruani emrat</h2>
+            <div id="name-inputs-container"></div>
+            <div id="difficulty-selector" style="display:none;">
+                <p>Vështirësia e AI:</p>
+                <div class="toggle-group">
+                    <button onclick="setDifficulty('easy')">Lehtë</button>
+                    <button onclick="setDifficulty('normal')" class="active">Normal</button>
+                    <button onclick="setDifficulty('hard')">E vështirë</button>
+                </div>
+            </div>
+            <div class="toggle-group" id="dice-mode-selector">
+                <p>Mënyra e zarit:</p>
+                <button onclick="setDiceMode('single')">🎲 Një zar</button>
+                <button onclick="setDiceMode('double')" class="active">🎲🎲 Dy zar</button>
+            </div>
+            <div class="modal-actions">
+                <button class="btn secondary" onclick="backToMenu()">◀ Kthehu</button>
+                <button class="btn primary" onclick="startGameWithNames()">Fillo lojën</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal">
+        <div class="help-content">
+            <span class="close-btn" onclick="hideHelp()">&times;</span>
+            <h2>Si të luhet Ludo Alb King</h2>
+            <h3>🎯 Qëllimi</h3>
+            <p>I pari që i fut të 4 figurat nga baza e vet, rreth tabelës dhe në trekëndëshin qendror, fiton.</p>
+            <h3>🎲 Fillimi</h3>
+            <ul><li>Duhet të hedhësh 6 për të nxjerrë një figurë nga baza.</li><li>Hedhja e 6 jep edhe një rradhë tjetër!</li></ul>
+            <h3>🚶 Lëvizja</h3>
+            <ul><li>Kliko mbi figurën e theksuar për ta lëvizur.</li><li>Figurat lëvizin në drejtim të akrepave të orës.</li></ul>
+            <h3>⚔️ Kapja</h3>
+            <ul><li>Nëse zbret mbi një figurë kundërshtare, ajo kthehet në bazë.</li><li>Sheshat me yll (⭐) janë të sigurt.</li></ul>
+            <h3>🏆 Fitorja</h3>
+            <p>Lojtari që fut të 4 figurat në qendër fiton dhe merr 50 monedha bonus!</p>
+        </div>
+    </div>
+
+    <!-- Win Screen -->
+    <div id="win-screen">
+        <h1 class="win-title">🎉 Urime! 🎉</h1>
+        <p class="winner-name" id="winner-name">FITOI!</p>
+        <button class="btn primary" onclick="restartGame()">Luaj Përsëri</button>
+    </div>
+
+    <!-- Game Container (Three.js renders here) -->
+    <div id="game-container"></div>
+
+    <!-- Game UI Overlay -->
+    <div id="game-ui">
+        <div class="player-panel">
+            <div class="current-player">
+                <div class="player-color-dot" id="player-dot"></div>
+                <span class="player-name" id="player-name">RED</span>
+            </div>
+            <div class="turn-status" id="turn-status">Hidh zarin...</div>
+        </div>
+
+        <div class="piece-counter">
+            <div class="counter-title">Figurat në shtëpi</div>
+            <div class="counter-group">
+                <div class="counter-label" id="player1-label">Ti</div>
+                <div class="counter-row"><div class="counter-dot" style="background: #E53935"></div><span id="red-count">0/4</span></div>
+                <div class="counter-row"><div class="counter-dot" style="background: #FDD835"></div><span id="yellow-count">0/4</span></div>
+            </div>
+            <div class="counter-group">
+                <div class="counter-label" id="player2-label">Kundërshtar</div>
+                <div class="counter-row"><div class="counter-dot" style="background: #43A047"></div><span id="green-count">0/4</span></div>
+                <div class="counter-row"><div class="counter-dot" style="background: #1E88E5"></div><span id="blue-count">0/4</span></div>
+            </div>
+        </div>
+
+        <div class="message-log" id="message-log"></div>
+
+        <div class="left-controls">
+            <button class="settings-btn controls-toggle" id="controls-toggle" onclick="toggleControls()" title="Menu">▲</button>
+            <div class="controls-buttons" id="controls-buttons">
+                <button class="settings-btn" onclick="goHome()" title="Kryefaqja">🏠</button>
+                <button class="settings-btn" id="sound-toggle" onclick="toggleSound()" title="Zëri">🔊</button>
+                <button class="settings-btn" onclick="saveAndQuit()" title="Ruaj & Dil">💾</button>
+                <button class="settings-btn" onclick="takeScreenshot()" title="Screenshot">📷</button>
+                <button class="settings-btn" onclick="shareGame()" title="Shpërndaje">📤</button>
+                <button class="settings-btn" onclick="zoomIn()" title="Afro">➕</button>
+                <button class="settings-btn" onclick="zoomOut()" title="Largo">➖</button>
+                <button class="settings-btn" onclick="showHelp()" title="Ndihmë">❓</button>
+            </div>
+        </div>
+
+        <div class="dice-panel">
+            <div class="dice-container">
+                <div class="dice-display" id="dice-1" onclick="selectDice(0)">?</div>
+                <div class="dice-display" id="dice-2" onclick="selectDice(1)">?</div>
+            </div>
+            <button class="roll-btn" id="roll-btn" onclick="rollDice()">Hidh Zarin</button>
+        </div>
+    </div>
+
+    <!-- Game Logic -->
+    <script type="module" src="game.js"></script>
+</body>
+</html>
