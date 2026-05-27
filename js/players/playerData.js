@@ -1,4 +1,4 @@
-let playerData = {
+export let playerData = {
     name: "Lojtari",
     level: 1,
     xp: 0,
@@ -9,7 +9,8 @@ let playerData = {
 export function loadPlayerData() {
     const saved = localStorage.getItem("ludo_player");
     if (saved) playerData = JSON.parse(saved);
-    document.getElementById("editPlayerName").value = playerData.name;
+    const editNameField = document.getElementById("editPlayerName");
+    if (editNameField) editNameField.value = playerData.name;
     updatePlayerUI();
 }
 
@@ -18,13 +19,20 @@ export function savePlayerData() {
 }
 
 export function updatePlayerUI() {
-    document.getElementById("playerNameDisplay").innerText = playerData.name;
-    document.getElementById("playerLevelDisplay").innerText = `Niveli ${playerData.level}`;
-    document.getElementById("coinDisplay").innerHTML = `🪙 ${playerData.coins}`;
-    document.getElementById("modalPlayerLevel").innerText = playerData.level;
-    document.getElementById("modalPlayerXp").innerText = playerData.xp;
-    document.getElementById("modalPlayerCoins").innerText = playerData.coins;
-    document.getElementById("modalPlayerWins").innerText = playerData.wins;
+    const nameDisplay = document.getElementById("playerNameDisplay");
+    if (nameDisplay) nameDisplay.innerText = playerData.name;
+    const levelDisplay = document.getElementById("playerLevelDisplay");
+    if (levelDisplay) levelDisplay.innerText = `Niveli ${playerData.level}`;
+    const coinDisplay = document.getElementById("coinDisplay");
+    if (coinDisplay) coinDisplay.innerHTML = `🪙 ${playerData.coins}`;
+    const modalLevel = document.getElementById("modalPlayerLevel");
+    if (modalLevel) modalLevel.innerText = playerData.level;
+    const modalXp = document.getElementById("modalPlayerXp");
+    if (modalXp) modalXp.innerText = playerData.xp;
+    const modalCoins = document.getElementById("modalPlayerCoins");
+    if (modalCoins) modalCoins.innerText = playerData.coins;
+    const modalWins = document.getElementById("modalPlayerWins");
+    if (modalWins) modalWins.innerText = playerData.wins;
 }
 
 export function addXP(amount) {
@@ -70,4 +78,10 @@ export function showNotification(msg, color) {
     notif.style.fontWeight = "bold";
     document.body.appendChild(notif);
     setTimeout(() => notif.remove(), 2000);
+}
+
+// Funksion ndihmës për closeModal (mund të jetë diku tjetër, por e vendosim këtu për siguri)
+function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.style.display = "none";
 }
