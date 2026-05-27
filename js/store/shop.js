@@ -38,6 +38,6 @@ export function buyCoins(amount) {
         updatePlayerUI();
         showNotification(`Blevë ${amount} 🪙!`, "green");
     } else {
-        showNotification("Nuk ke mjaft monedha!", "red");
+        showNotification("Nuk ke mjaft monedha për të blerë!", "red");
     }
 }
