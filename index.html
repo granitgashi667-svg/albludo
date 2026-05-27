@@ -2,163 +2,43 @@
 <html lang="sq">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LUDO ALB KING | Premium</title>
-    <link rel="stylesheet" href="styles/main.css">
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ludo Alb King – Lojë klasike 3D në shqip</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-<!-- Loading Screen -->
-<div id="loading-screen"><div class="loader"></div><h2>LUDO ALB KING</h2><p>Po ngarkohet...</p></div>
-
-<!-- SHTESAT E REJA -->
-<div class="profile-bar">
-    <div class="profile-info" onclick="openProfileModal()">
-        <div class="avatar"><i class="fas fa-crown"></i></div>
-        <div class="stats">
-            <span class="name" id="playerNameDisplay">Lojtari</span>
-            <span class="level" id="playerLevelDisplay">Niveli 1</span>
+    <div class="hero">
+        <div class="hero-content">
+            <h1><i class="fas fa-dice-d6"></i> LUDO ALB KING</h1>
+            <p class="tagline">Luaj Ludo klasik në 3D – plot ngjyra, strategji dhe argëtim!</p>
+            <a href="play.html" class="btn-play"><i class="fas fa-play"></i> Luaj Tani</a>
+            <div class="features">
+                <div><i class="fas fa-robot"></i> Kundër AI</div>
+                <div><i class="fas fa-users"></i> 2–4 lojtarë</div>
+                <div><i class="fas fa-dice"></i> Dy zare / një zar</div>
+                <div><i class="fas fa-save"></i> Ruaj / vazhdo</div>
+                <div><i class="fas fa-camera"></i> Screenshot</div>
+                <div><i class="fas fa-volume-up"></i> Efekte zanore</div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="mockup-board"></div>
         </div>
     </div>
-    <div class="coins" id="coinDisplay">🪙 100</div>
-</div>
-<div class="side-menu">
-    <div class="side-btn" onclick="openStoreModal()"><i class="fas fa-store"></i></div>
-    <div class="side-btn" onclick="openProfileModal()"><i class="fas fa-user"></i></div>
-    <div class="side-btn" onclick="toggleSound()"><i class="fas fa-volume-up" id="soundIcon"></i></div>
-</div>
-<div class="chat-container">
-    <div class="chat-messages" id="chatMessages"></div>
-    <div class="chat-input-area">
-        <input type="text" id="chatInput" class="chat-input" placeholder="Mesazh...">
-        <button class="chat-send" onclick="sendChatMessage()">Dërgo</button>
-    </div>
-</div>
-<div id="profileModal" class="modal">
-    <div class="modal-card">
-        <h2><i class="fas fa-user"></i> Profili</h2>
-        <p><strong>Emri:</strong> <input type="text" id="editPlayerName" value="Lojtari" style="width:80%; padding:5px; border-radius:20px;"></p>
-        <p><strong>Niveli:</strong> <span id="modalPlayerLevel">1</span></p>
-        <p><strong>XP:</strong> <span id="modalPlayerXp">0</span> / 100</p>
-        <p><strong>Monedha:</strong> <span id="modalPlayerCoins">100</span> 🪙</p>
-        <p><strong>Fitoret:</strong> <span id="modalPlayerWins">0</span></p>
-        <button onclick="saveProfileChanges()">Ruaj</button>
-        <button onclick="closeModal('profileModal')">Mbylle</button>
-    </div>
-</div>
-<div id="storeModal" class="modal">
-    <div class="modal-card">
-        <h2><i class="fas fa-store"></i> Dyqani</h2>
-        <div id="storeItems"></div>
-        <button onclick="closeModal('storeModal')">Mbylle</button>
-    </div>
-</div>
-<button class="home-button" id="exitToMenuBtn" onclick="goHome()" style="display:none;">🏠 Kthehu në fillim</button>
-
-<!-- Game Container -->
-<div id="game-container"></div>
-
-<!-- Menu Screens -->
-<div id="menu-screen">
-    <div class="menu-card">
-        <h1 class="menu-title">LUDO ALB KING</h1>
-        <p class="menu-subtitle">3D – Classic Shqiptare</p>
-        <div class="menu-buttons">
-            <button class="menu-btn primary" id="resume-btn" style="display:none;" onclick="resumeGame()">Vazhdo Lojën</button>
-            <button class="menu-btn primary" onclick="selectMode('single')">🤖 Kundër AI</button>
-            <button class="menu-btn primary" onclick="selectMode('2p')">👥 2 Lojtarë</button>
-            <button class="menu-btn primary" onclick="selectMode('4p')">👥👥 4 Lojtarë</button>
-            <button class="menu-btn secondary" onclick="showHelp()">📖 Mëso si të luash</button>
+    <div class="howto">
+        <h2><i class="fas fa-question-circle"></i> Si të luhet?</h2>
+        <div class="steps">
+            <div><strong>1.</strong> Hidh zarin – duhet 6 për të nisur.</div>
+            <div><strong>2.</strong> Kliko figurën që do të lëvizësh.</div>
+            <div><strong>3.</strong> Kap kundërshtarët duke zbritur mbi ta.</div>
+            <div><strong>4.</strong> Fito duke futur të 4 figurat në qendër.</div>
         </div>
+        <p class="cta">Gati për sfidë? <a href="play.html">Kliko këtu →</a></p>
     </div>
-</div>
-<div id="name-screen" style="display:none;">
-    <div class="menu-card">
-        <h1 style="font-size:2rem;">Vendosni emrat</h1>
-        <div class="name-inputs" id="name-inputs-container"></div>
-        <div class="difficulty-selector" id="difficulty-selector" style="display:none;">
-            <button class="difficulty-btn" onclick="setDifficulty('easy')">Lehtë</button>
-            <button class="difficulty-btn selected" onclick="setDifficulty('normal')">Mesatare</button>
-            <button class="difficulty-btn" onclick="setDifficulty('hard')">E vështirë</button>
-        </div>
-        <div class="difficulty-selector" id="dice-mode-selector">
-            <button class="difficulty-btn" onclick="setDiceMode('single')">🎲 Një Zar</button>
-            <button class="difficulty-btn selected" onclick="setDiceMode('double')">🎲🎲 Dy Zare</button>
-        </div>
-        <div class="menu-buttons">
-            <button class="menu-btn secondary" onclick="backToMenu()">Kthehu</button>
-            <button class="menu-btn primary" onclick="startGameWithNames()">Fillo Lojën</button>
-        </div>
-    </div>
-</div>
-<div id="help-modal" class="modal">
-    <div class="help-content">
-        <span class="close-btn" onclick="hideHelp()">&times;</span>
-        <h2>Si të luash Ludo Alb King</h2>
-        <h3>🎯 Objektivi</h3><p>Lëvizi të 4 pjesët nga baza në qendër.</p>
-        <h3>🎲 Fillimi</h3><p>Duhet 6 për të nisur. 6 jep rradhë shtesë.</p>
-        <h3>🚶 Lëvizja</h3><p>Kliko mbi pjesën e theksuar.</p>
-        <h3>⚔️ Kapja</h3><p>Nëse zbret në katrorin e kundërshtarit, ai kthehet në shtëpi.</p>
-        <h3>🏠 Shtëpia</h3><p>Pasi rrethon tabelën, duhet numri i saktë për të hyrë në qendër.</p>
-        <h3>🏆 Fituesi</h3><p>Ai që fut të 4 pjesët në qendër fiton.</p>
-    </div>
-</div>
-<div id="win-screen">
-    <div class="win-card">
-        <h1 class="win-title">🎉 Urime! 🎉</h1>
-        <p class="winner-name" id="winner-name">RED WINS!</p>
-        <button class="menu-btn primary" onclick="restartGame()">Luaj Përsëri</button>
-    </div>
-</div>
-
-<!-- Game UI Overlay -->
-<div id="game-ui">
-    <div class="player-panel">
-        <div class="current-player">
-            <div class="player-color-dot" id="player-dot"></div>
-            <span class="player-name" id="player-name">RED</span>
-        </div>
-        <div class="turn-status" id="turn-status">Rrotulloni zarin...</div>
-    </div>
-    <div class="piece-counter">
-        <div class="counter-title">Pjesët në shtëpi</div>
-        <div class="counter-group"><div class="counter-label">Ju</div><div class="counter-row"><div class="counter-dot" style="background:#E53935"></div><span id="red-count">0/4</span></div><div class="counter-row"><div class="counter-dot" style="background:#FDD835"></div><span id="yellow-count">0/4</span></div></div>
-        <div class="counter-group"><div class="counter-label">AI</div><div class="counter-row"><div class="counter-dot" style="background:#43A047"></div><span id="green-count">0/4</span></div><div class="counter-row"><div class="counter-dot" style="background:#1E88E5"></div><span id="blue-count">0/4</span></div></div>
-    </div>
-    <div class="message-log" id="message-log"></div>
-    <div class="left-controls">
-        <button class="settings-btn controls-toggle" id="controls-toggle" onclick="toggleControls()">▲</button>
-        <div class="controls-buttons" id="controls-buttons">
-            <button class="settings-btn" onclick="goHome()">🏠</button>
-            <button class="settings-btn" onclick="toggleSound()">🔊</button>
-            <button class="settings-btn" onclick="saveAndQuit()">💾</button>
-            <button class="settings-btn" onclick="takeScreenshot()">📷</button>
-            <button class="settings-btn" onclick="shareGame()">📤</button>
-            <button class="settings-btn" onclick="zoomIn()">➕</button>
-            <button class="settings-btn" onclick="zoomOut()">➖</button>
-            <button class="settings-btn" onclick="showHelp()">❓</button>
-        </div>
-    </div>
-    <div class="dice-panel">
-        <div class="dice-container">
-            <div class="dice-display" id="dice-1" onclick="selectDice(0)">?</div>
-            <div class="dice-display" id="dice-2" onclick="selectDice(1)">?</div>
-        </div>
-        <button class="roll-btn" id="roll-btn" onclick="rollDice()">Rrotullo</button>
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script type="importmap">
-{
-    "imports": {
-        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-    }
-}
-</script>
-<script type="module" src="js/main.js"></script>
+    <footer>
+        <p><i class="far fa-copyright"></i> 2025 Ludo Alb King – Krijuar me <i class="fas fa-heart" style="color:#E53935;"></i> për dashamirët e ludos</p>
+    </footer>
 </body>
 </html>
